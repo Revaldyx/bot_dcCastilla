@@ -35,14 +35,14 @@ module.exports = {
         - Tidak boleh mengkhianati keluarga dan menjadi mata-mata dengan alasan apapun.(*Punishment Dihilangkan secara permanen*)
         - Wajib menjaga kehormatan keluarga kapanpun dan dimanapun. (*Punishment Dicopot dari jabatan lalu diinterogasi*)
         - Dilarang membuat keputusan besar tanpa izin **BOSS/GODMOTHER**. (*Punishment Dihukum di depan keluarga*)
-        - Barang hasil rampokan/sitaan harus dilaporkan ke **ADVISOR**. (*Punishment Disita + Interogasi*)
+        - Barang hasil rampokan, sitaan dan resources kelompok harus dilaporkan ke **ADVISOR**. (*Punishment Disita + Interogasi*)
         - Setiap anggota wajib hafal kode, lokasi aman, dan nama-nama penting dalam keluarga. (*Punishment Latihan ulang + Hinaan publik*)
         - Dilarang keras membuat perjanjian dengan geng lain tanpa restu **Petinggi/Commander**. (*Punishment Diculik + Diadili internal*)
         - Hormati sesama anggota, apapun jabatannya. (*Punishment Ditegur + Tugas berat*)
         - Dilarang keras **KORUPSI** dalam bentuk, situasi dan alasan apapun. (*Punishment Dihilangkan secara permanen*)
         - Ketika Aktivitas di kota Moxie wajib hukumnya mengganti nama passport (Username Fivem) dengan format **"Castilla - [Nama Karakter]"** (*Punishment Ditegur + Tidak boleh ikut kegiatan sampai ganti nama*)
 
-        Note : Bila ada yang ingin ditanyakan silahkan DM **BOSS** atau **ADVISOR** atau Chat di [「💌」𝗖𝗵𝗮𝘁-𝗖𝗮𝘀𝘁𝗶𝗹𝗹𝗮-𝗠𝗼𝘅𝗶𝗲](https://discord.com/channels/1220021811325042768/1381949017780518995). Segala tambahan/perubahan akan di update di rules ini.
+        Note : Bila ada yang ingin ditanyakan silahkan DM **BOSS** atau **COMMANDER** atau Chat di [「💌」𝗖𝗵𝗮𝘁-𝗖𝗮𝘀𝘁𝗶𝗹𝗹𝗮-𝗠𝗼𝘅𝗶𝗲](https://discord.com/channels/1220021811325042768/1381949017780518995). Segala tambahan/perubahan akan di update di rules ini.
         `.trim();
 
         try {
