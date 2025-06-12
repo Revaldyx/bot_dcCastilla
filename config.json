@@ -1,0 +1,13 @@
+{
+  "prefix": "!",
+  "embedColor": "#0099ff",
+  "maxEmbedLength": 4096,
+  "maxFieldLength": 1024,
+  "maxFields": 25,
+  "errorColor": "#ff0000",
+  "successColor": "#00ff00",
+  "warningColor": "#ffaa00",
+  "maxRetries": 3,
+  "retryDelay": 1000,
+  "defaultThumbnail": "https://cdn.discordapp.com/attachments/912410701761499166/1382835006837227743/image13.png"
+}
