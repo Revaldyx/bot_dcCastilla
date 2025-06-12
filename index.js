@@ -64,7 +64,7 @@ client.once('ready', () => {
     console.log(`🏠 Connected to ${client.guilds.cache.size} servers`);
 
     // Set bot activity with proper type
-    client.user.setActivity('Melihat DC Castilla', { type: ActivityType.Watching });
+    client.user.setActivity('Discord Castilla', { type: ActivityType.Watching });
 });
 
 client.on('messageCreate', async message => {
