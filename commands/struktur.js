@@ -49,7 +49,7 @@ module.exports = {
                     },
                     {
                         name: '💼 **Les Courtiers (Brokers)**',
-                        value: '• ZeSakura Tetzu\n• Keiisya Rose\n• Baut Castilla\n• Asep Castilla\n• Denz Castilla\n• Cyamiaw Castilla\n• Flora Cloveynera\n• Walther White\n• Boy Castilla\n• Arth Rose',
+                        value: '• ZeSakura Tetzu\n• Keiisya Rose\n• Baut Castilla\n• Asep Castilla\n• Denz Castilla\n• Flora Cloveynera\n• Walther White\n• Boy Castilla\n• Arth Rose',
                         inline: false
                     },
                     {
@@ -59,7 +59,7 @@ module.exports = {
                     },
                     {
                         name: '🤝 **Les Recrues (Relasi)**',
-                        value: '• \n• \n• ',
+                        value: '• Cyamiaw Castilla\n• \n• ',
                         inline: false
                     }
                 )

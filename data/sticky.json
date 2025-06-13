@@ -1,38 +1,45 @@
 {
   "1382421696211976293": {
-    "messageId": "1382964063977340998",
+    "messageId": "1383149477845532854",
     "content": "**Channel ini berfungsi agar jika ada rapat IC/OOC, segala sesuatu yang sudah diputuskan akan dicatat disini.**",
     "authorId": "403174107904081933",
     "createdAt": 1749794724646
   },
   "1381996083076661350": {
-    "messageId": "1382976565037629531",
-    "content": "\n```\nKeperluan :\nJenis Uang (PUTIH/MERAH) :\nWithdraw/Deposit :\nBefore :\nAfter :\n```\n**SERTAKAN FOTO**",
+    "messageId": "1383040063776096387",
+    "content": "```\nKeperluan :\nJenis Uang (PUTIH/MERAH) :\nWithdraw/Deposit :\nBefore :\nAfter :\n```\n**SERTAKAN FOTO**",
     "authorId": "403174107904081933",
-    "createdAt": 1749797705081
-  },
-  "1381954117156601856": {
-    "messageId": "1382976990478602341",
-    "content": "\n```Nama : \nSteam Hex :\nDiajak Oleh : ```\n**Isi jika sudah disuruh sama captains**",
-    "authorId": "403174107904081933",
-    "createdAt": 1749797806509
-  },
-  "1381949017780518995": {
-    "messageId": "1383031601000353882",
-    "content": "Selamat datang di Castilla. \nSilakan ganti passport kalian ke **Castilla - NamaIC** agar gampang kalau ada terjadi sesuatu. \nHave Fun Semuanya 🥰",
-    "authorId": "403174107904081933",
-    "createdAt": 1749800733556
-  },
-  "1382427649485312082": {
-    "messageId": "1382992317979295784",
-    "content": "\n```Nama Barang :\nDeposit/Withdraw :\nJumlah :```",
-    "authorId": "403174107904081933",
-    "createdAt": 1749801460833
+    "createdAt": 1749812839429,
+    "isPlainText": true
   },
   "1382428149391953930": {
-    "messageId": "1382992515153530931",
-    "content": "\n```Nama Barang :\nDeposit/Withdraw :\nBefore :\nAfter :\n```",
+    "messageId": "1383164141505876120",
+    "content": "```\nNama Barang :\nDeposit/Withdraw :\nBefore :\nAfter :\n```\n**SERTAKAN FOTO**",
     "authorId": "403174107904081933",
-    "createdAt": 1749801507813
+    "createdAt": 1749813170964,
+    "isPlainText": true,
+    "lastRecreated": 1749842421470
+  },
+  "1382427649485312082": {
+    "messageId": "1383041798909464787",
+    "content": "```Nama Barang :\nDeposit/Withdraw :\nJumlah :```",
+    "authorId": "403174107904081933",
+    "createdAt": 1749813253230,
+    "isPlainText": true
+  },
+  "1383159361022459934": {
+    "messageId": "1383159845917556907",
+    "content": "```\nNama : Fulan\nSteam Hex : \nPJ Relasi : Biru/Matteo\n``` **Diisi jika sudah diacc oleh Captains**",
+    "authorId": "403174107904081933",
+    "createdAt": 1749841397270,
+    "isPlainText": true
+  },
+  "1381949017780518995": {
+    "messageId": "1383166973340291233",
+    "content": "Buat sini kalau ke kota jangan lupa nama passport di ganti **Castilla - Nama** biar admin tau aktivitas kita ngapain di moxie thanks 🥰Cara ganti passportnya tekan GEAR di tampilan awal fivem di sebelah kanan atas > terus masukkan Player name sesuai yang diatas",
+    "imageUrl": "https://cdn.discordapp.com/attachments/1381949017780518995/1382269077975863296/image.png?ex=684d2ce5&is=684bdb65&hm=8158e1a8b2a8e91b1656fedbf706bcaec660be66c0dccc5f9545721f44722920&",
+    "authorId": "403174107904081933",
+    "createdAt": 1749843096553,
+    "isPlainText": true
   }
 }

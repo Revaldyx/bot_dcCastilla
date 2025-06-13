@@ -2,7 +2,7 @@ const { EmbedBuilder } = require('discord.js');
 const config = require('../config.json');
 
 module.exports = {
-    name: 'help',
+    name: 'helpboscastilla',
     description: 'Menampilkan daftar command yang tersedia',
     async execute(message, args, client) {
         try {
@@ -33,7 +33,7 @@ module.exports = {
             await message.channel.send({ embeds: [embed] });
 
         } catch (error) {
-            console.error('Error in help command:', error);
+            console.error('Error in helpboscastilla command:', error);
             await message.reply('❌ Gagal menampilkan daftar command!');
         }
     }

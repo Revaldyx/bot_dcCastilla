@@ -66,6 +66,15 @@ client.once('ready', () => {
 
     // Set bot activity with proper type
     client.user.setActivity('Discord Castilla', { type: ActivityType.Watching });
+
+    // Validate sticky message integrity on startup
+    setTimeout(async () => {
+        try {
+            await StickyManager.validateStickyIntegrity(client);
+        } catch (error) {
+            console.error('Error during sticky integrity check:', error);
+        }
+    }, 5000);
 });
 
 client.on('messageCreate', async message => {
@@ -105,6 +114,29 @@ client.on('messageCreate', async message => {
         } catch (replyError) {
             console.error('Cannot send error message:', replyError);
         }
+    }
+});
+
+// Handle message deletion to protect sticky messages
+client.on('messageDelete', async deletedMessage => {
+    try {
+        // Skip if message is from a DM or partial message
+        if (!deletedMessage.guild || !deletedMessage.channel) return;
+
+        // Check if deleted message was a sticky message and recreate it
+        await StickyManager.handleStickyDeletion(deletedMessage, client);
+    } catch (error) {
+        console.error('Error handling message deletion:', error);
+    }
+});
+
+// Handle bulk message deletion to protect sticky messages
+client.on('messageDeleteBulk', async deletedMessages => {
+    try {
+        // Handle bulk deletion of sticky messages
+        await StickyManager.handleBulkStickyDeletion(deletedMessages, client);
+    } catch (error) {
+        console.error('Error handling bulk message deletion:', error);
     }
 });
 
