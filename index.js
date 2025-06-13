@@ -4,6 +4,7 @@ const path = require('path');
 require('dotenv').config();
 
 const config = require('./config.json');
+const StickyManager = require('./utils/stickyManager');
 
 /**
  * Discord Bot Client with improved error handling
@@ -68,6 +69,15 @@ client.once('ready', () => {
 });
 
 client.on('messageCreate', async message => {
+    // Handle sticky messages first (for non-bot, non-command messages)
+    if (!message.author.bot && !message.content.startsWith(config.prefix)) {
+        try {
+            await StickyManager.handleStickyMessage(message);
+        } catch (error) {
+            console.error('Error in sticky message handler:', error);
+        }
+    }
+
     // Ignore bots and messages without prefix
     if (message.author.bot || !message.content.startsWith(config.prefix)) return;
 
