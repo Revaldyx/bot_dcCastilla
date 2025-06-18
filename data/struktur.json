@@ -1,0 +1,204 @@
+{
+  "positions": {
+    "boss": {
+      "name": "👑 **Le Patron (Boss)**",
+      "members": [
+        {
+          "id": "bos_valdyx_st_castilla",
+          "name": "Valdyx ST Castilla",
+          "userId": "403174107904081933",
+          "addedBy": "403174107904081933",
+          "addedAt": 1750171827995
+        }
+      ],
+      "maxMembers": 1,
+      "description": "Pemimpin tertinggi keluarga Castilla"
+    },
+    "godmother": {
+      "name": "💎 **La Marraine (Godmother)**",
+      "members": [
+        {
+          "id": "god_michiella_castilla",
+          "name": "Michiella Castilla",
+          "userId": "913276778091536384",
+          "addedBy": "403174107904081933",
+          "addedAt": 1750172165977
+        }
+      ],
+      "maxMembers": 1,
+      "description": "Ibu baptis keluarga Castilla"
+    },
+    "advisor": {
+      "name": "🎯 **Le Conseiller (Advisor)**",
+      "members": [
+        {
+          "id": "adv_aksara_abimana",
+          "name": "Aksara Abimana",
+          "userId": "1058968902220128276",
+          "addedBy": "403174107904081933",
+          "addedAt": 1750171927153
+        },
+        {
+          "id": "adv_grey_havi",
+          "name": "Grey Havi",
+          "userId": "492154729582034948",
+          "addedBy": "403174107904081933",
+          "addedAt": 1750171952894
+        },
+        {
+          "id": "adv_maura_olydia_castill",
+          "name": "Maura Olydia Castilla",
+          "userId": "1299896223083532291",
+          "addedBy": "403174107904081933",
+          "addedAt": 1750171976606
+        }
+      ],
+      "maxMembers": 3,
+      "description": "Penasihat keluarga Castilla"
+    },
+    "captain": {
+      "name": "⚔️ **Les Capitaines (Captains)**",
+      "members": [
+        {
+          "id": "cap_jack_castilla",
+          "name": "Jack Castilla",
+          "userId": "317624652350619650",
+          "addedBy": "403174107904081933",
+          "addedAt": 1750171699634
+        },
+        {
+          "id": "cap_biru_castilla",
+          "name": "Biru Castilla",
+          "userId": "762836598080536588",
+          "addedBy": "403174107904081933",
+          "addedAt": 1750172409591
+        },
+        {
+          "id": "cap_mattheo_castilla",
+          "name": "Mattheo Castilla",
+          "userId": "486491828238155787",
+          "addedBy": "403174107904081933",
+          "addedAt": 1750172483820
+        }
+      ],
+      "maxMembers": 3,
+      "description": "Kapten operasional keluarga Castilla"
+    },
+    "broker": {
+      "name": "💼 **Les Courtiers (Brokers)**",
+      "members": [
+        {
+          "id": "bro_arth_rose",
+          "name": "Arth Rose",
+          "userId": "289935368067743744",
+          "addedBy": "403174107904081933",
+          "addedAt": 1750172660617
+        },
+        {
+          "id": "bro_zesakura_tetzu",
+          "name": "ZeSakura Tetzu",
+          "userId": "693760875353341952",
+          "addedBy": "403174107904081933",
+          "addedAt": 1750172755616
+        },
+        {
+          "id": "bro_boy_castilla",
+          "name": "Boy Castilla",
+          "userId": "1124630398505324555",
+          "addedBy": "403174107904081933",
+          "addedAt": 1750190606216
+        },
+        {
+          "id": "bro_keisyaa_rose",
+          "name": "Keisyaa Rose",
+          "userId": "870021516543262771",
+          "addedBy": "403174107904081933",
+          "addedAt": 1750190683104
+        },
+        {
+          "id": "bro_flora_cloveynera",
+          "name": "Flora Cloveynera",
+          "userId": "201983888912809984",
+          "addedBy": "403174107904081933",
+          "addedAt": 1750190916414
+        }
+      ],
+      "maxMembers": 10,
+      "description": "Perantara bisnis keluarga Castilla"
+    },
+    "soldier": {
+      "name": "🔫 **Les Soldats (Soldier)**",
+      "members": [],
+      "maxMembers": 17,
+      "description": "Tentara keluarga Castilla"
+    },
+    "recruit": {
+      "name": "🤝 **Les Recrues (Relasi)**",
+      "members": [
+        {
+          "id": "rec_gio_arsena",
+          "name": "Gio Arsana",
+          "userId": "734460917055619132",
+          "addedBy": "403174107904081933",
+          "addedAt": 1750173091394
+        },
+        {
+          "id": "rec_nurawan_castilla",
+          "name": "Nurawan Castilla",
+          "userId": "441594829177356289",
+          "addedBy": "403174107904081933",
+          "addedAt": 1750173243388
+        },
+        {
+          "id": "rec_vinz_castila",
+          "name": "Vinz Castila",
+          "userId": "1061457621044957225",
+          "addedBy": "403174107904081933",
+          "addedAt": 1750173273065
+        },
+        {
+          "id": "rec_van_housen",
+          "name": "Van Housen",
+          "userId": "770850023343652876",
+          "addedBy": "403174107904081933",
+          "addedAt": 1750173490673
+        },
+        {
+          "id": "rec_yupi_arsana",
+          "name": "Yupi Arsana",
+          "userId": "1295815336779710554",
+          "addedBy": "403174107904081933",
+          "addedAt": 1750173518497
+        },
+        {
+          "id": "rec_sanque_castilla",
+          "name": "Sanque Castilla",
+          "userId": "1045323574304583770",
+          "addedBy": "403174107904081933",
+          "addedAt": 1750173558149
+        },
+        {
+          "id": "rec_baut_castilla",
+          "name": "Baut Castilla",
+          "userId": "829977348535222312",
+          "addedBy": "403174107904081933",
+          "addedAt": 1750190445964
+        },
+        {
+          "id": "rec_whalter_white",
+          "name": "Walter White",
+          "userId": "804613378160066560",
+          "addedBy": "403174107904081933",
+          "addedAt": 1750190505008
+        }
+      ],
+      "maxMembers": 50,
+      "description": "Rekrut dan relasi keluarga Castilla"
+    }
+  },
+  "metadata": {
+    "lastUpdated": 1750190916414,
+    "version": "1.0.0",
+    "totalMembers": 21
+  }
+}

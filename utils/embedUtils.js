@@ -62,35 +62,60 @@ class EmbedUtils {
     }
 
     /**
-     * Check if bot has required permissions in channel
+     * Check if bot has required permissions in channel with detailed analysis
      * @param {TextChannel} channel - Discord channel
      * @param {GuildMember} botMember - Bot's guild member
-     * @returns {Object} Permission check result
+     * @returns {Object} Detailed permission check result
      */
     static checkPermissions(channel, botMember = null) {
         if (!channel.guild) {
-            return { hasPermissions: true, missingPermissions: [] };
+            return { hasPermissions: true, missingPermissions: [], details: 'DM Channel' };
         }
 
         const member = botMember || channel.guild.members.me;
+
+        // Check if bot is in the guild
+        if (!member) {
+            return {
+                hasPermissions: false,
+                missingPermissions: ['Bot not in guild'],
+                details: 'Bot is not a member of this guild'
+            };
+        }
+
         const permissions = channel.permissionsFor(member);
 
+        // Check if bot can access the channel at all
+        if (!permissions) {
+            return {
+                hasPermissions: false,
+                missingPermissions: ['No channel access'],
+                details: 'Bot cannot access this channel'
+            };
+        }
+
         const requiredPerms = [
-            PermissionFlagsBits.SendMessages,
-            PermissionFlagsBits.EmbedLinks
+            { name: 'View Channel', flag: PermissionFlagsBits.ViewChannel },
+            { name: 'Send Messages', flag: PermissionFlagsBits.SendMessages },
+            { name: 'Embed Links', flag: PermissionFlagsBits.EmbedLinks }
         ];
 
         const missingPermissions = [];
+        const hasPermissions = [];
 
         for (const perm of requiredPerms) {
-            if (!permissions.has(perm)) {
-                missingPermissions.push(perm);
+            if (!permissions.has(perm.flag)) {
+                missingPermissions.push(perm.name);
+            } else {
+                hasPermissions.push(perm.name);
             }
         }
 
         return {
             hasPermissions: missingPermissions.length === 0,
-            missingPermissions
+            missingPermissions,
+            hasPermissions: hasPermissions,
+            details: `${hasPermissions.length}/${requiredPerms.length} permissions available`
         };
     }
 
@@ -242,6 +267,117 @@ class EmbedUtils {
         });
 
         return embeds;
+    }
+
+    /**
+     * Create a quick embed with common patterns
+     * @param {string} type - success, error, warning, info
+     * @param {string} title - Embed title
+     * @param {string} description - Embed description
+     * @param {Object} options - Additional options
+     * @returns {EmbedBuilder} Configured embed
+     */
+    static createQuickEmbed(type, title, description, options = {}) {
+        const colors = {
+            success: config.successColor || '#00ff00',
+            error: config.errorColor || '#ff0000',
+            warning: config.warningColor || '#ffaa00',
+            info: config.embedColor || '#0099ff'
+        };
+
+        const emojis = {
+            success: '✅',
+            error: '❌',
+            warning: '⚠️',
+            info: 'ℹ️'
+        };
+
+        const embed = new EmbedBuilder()
+            .setTitle(`${emojis[type] || ''} ${title}`)
+            .setDescription(description)
+            .setColor(colors[type] || colors.info);
+
+        if (options.timestamp) embed.setTimestamp();
+        if (options.footer) embed.setFooter(options.footer);
+        if (options.thumbnail) embed.setThumbnail(options.thumbnail);
+        if (options.fields) {
+            options.fields.forEach(field => embed.addFields(field));
+        }
+
+        return embed;
+    }
+
+    /**
+     * Send temporary message that auto-deletes
+     * @param {TextChannel} channel - Target channel
+     * @param {string|EmbedBuilder} content - Message content or embed
+     * @param {number} deleteAfter - Time in milliseconds before deletion
+     * @returns {Promise<Message>} Sent message
+     */
+    static async sendTemporaryMessage(channel, content, deleteAfter = 10000) {
+        const messageOptions = typeof content === 'string'
+            ? { content }
+            : { embeds: [content] };
+
+        const message = await channel.send(messageOptions);
+
+        setTimeout(() => {
+            message.delete().catch(() => { });
+        }, deleteAfter);
+
+        return message;
+    }
+
+    /**
+     * Validate embed before sending
+     * @param {EmbedBuilder} embed - Embed to validate
+     * @returns {Object} Validation result
+     */
+    static validateEmbed(embed) {
+        const data = embed.toJSON();
+        const errors = [];
+
+        if (data.title && data.title.length > 256) {
+            errors.push('Title exceeds 256 characters');
+        }
+
+        if (data.description && data.description.length > 4096) {
+            errors.push('Description exceeds 4096 characters');
+        }
+
+        if (data.fields) {
+            if (data.fields.length > 25) {
+                errors.push('Too many fields (max 25)');
+            }
+
+            data.fields.forEach((field, index) => {
+                if (field.name && field.name.length > 256) {
+                    errors.push(`Field ${index + 1} name exceeds 256 characters`);
+                }
+                if (field.value && field.value.length > 1024) {
+                    errors.push(`Field ${index + 1} value exceeds 1024 characters`);
+                }
+            });
+        }
+
+        if (data.footer && data.footer.text && data.footer.text.length > 2048) {
+            errors.push('Footer exceeds 2048 characters');
+        }
+
+        const totalLength = (data.title?.length || 0) +
+            (data.description?.length || 0) +
+            (data.fields?.reduce((sum, field) => sum + (field.name?.length || 0) + (field.value?.length || 0), 0) || 0) +
+            (data.footer?.text?.length || 0);
+
+        if (totalLength > 6000) {
+            errors.push('Total embed length exceeds 6000 characters');
+        }
+
+        return {
+            valid: errors.length === 0,
+            errors,
+            totalLength
+        };
     }
 }
 

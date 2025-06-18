@@ -1,26 +1,13 @@
+const { SlashCommandBuilder } = require('discord.js');
 const EmbedUtils = require('../utils/embedUtils');
-const { PermissionFlagsBits } = require('discord.js');
 
 module.exports = {
-    name: 'story',
-    description: 'Mengirim story latar belakang gang Castilla',
-    async execute(message, args) {
-        // Check bot permissions
-        const botPermissions = message.channel.permissionsFor(message.guild.members.me);
-        const requiredPerms = [PermissionFlagsBits.SendMessages, PermissionFlagsBits.EmbedLinks];
+    data: new SlashCommandBuilder()
+        .setName('story')
+        .setDescription('Mengirim story latar belakang gang Castilla'),
 
-        if (!botPermissions.has(requiredPerms)) {
-            const missingPerms = [];
-            if (!botPermissions.has(PermissionFlagsBits.SendMessages)) missingPerms.push('Send Messages');
-            if (!botPermissions.has(PermissionFlagsBits.EmbedLinks)) missingPerms.push('Embed Links');
-
-            try {
-                await message.author.send(`❌ Bot tidak memiliki permission berikut di channel #${message.channel.name}:\n- ${missingPerms.join('\n- ')}\n\nMinta admin server untuk memberikan permission ini kepada bot.`);
-            } catch (dmError) {
-                console.error('Cannot send DM to user:', dmError);
-            }
-            return;
-        }
+    async execute(interaction) {
+        await interaction.deferReply();
 
         const title = '📖 STORY CASTILLA';
         const longText = `
@@ -51,7 +38,7 @@ module.exports = {
 
         try {
             const embedCount = await EmbedUtils.sendLongEmbed(
-                message.channel,
+                interaction.channel,
                 title,
                 longText,
                 {
@@ -61,25 +48,11 @@ module.exports = {
                 }
             );
 
-            if (embedCount > 1) {
-                await message.reply(`✅ Berhasil mengirim ${embedCount} embed story!`);
-            }
-        } catch (error) {
-            console.error('Error sending story embed:', error);
+            await interaction.editReply(`✅ Berhasil mengirim ${embedCount} embed story!`);
 
-            if (error.code === 50013) {
-                try {
-                    await message.author.send('❌ Bot tidak memiliki permission yang cukup untuk mengirim embed di channel tersebut!');
-                } catch (dmError) {
-                    console.error('Cannot send DM to user:', dmError);
-                }
-            } else {
-                try {
-                    await message.reply('❌ Gagal mengirim story embed!');
-                } catch (replyError) {
-                    console.error('Cannot reply to message:', replyError);
-                }
-            }
+        } catch (error) {
+            console.error('Error in story slash command:', error);
+            await interaction.editReply('❌ Gagal mengirim story!');
         }
     }
 };

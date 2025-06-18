@@ -1,33 +1,85 @@
 # Discord Bot Castilla
 
-Bot Discord khusus untuk server Castilla dengan fitur lengkap termasuk sticky messages dengan dukungan gambar, embed messages, dan sistem manajemen channel.
+Bot Discord khusus untuk server Castilla dengan sistem manajemen struktur organisasi, sticky messages, dan berbagai fitur administrasi untuk roleplay mafia.
 
 ## 🌟 Fitur Utama
 
-- **Sticky Messages dengan Gambar**: Sistem pesan yang selalu muncul di atas channel dengan dukungan gambar
-- **Embed Messages**: Mengirim pesan dengan format embed yang menarik
-- **Long Text Support**: Otomatis memecah teks panjang menjadi beberapa embed
-- **Message Management**: Command untuk menghapus pesan dengan perlindungan sticky
-- **Command System**: Sistem command yang mudah diperluas
-- **Permission Checking**: Validasi permission bot secara otomatis
-- **Error Handling**: Penanganan error yang komprehensif
-- **Modular Structure**: Struktur kode yang terorganisir dan mudah dikelola
+- **Struktur Organisasi**: Sistem manajemen hierarki lengkap untuk organisasi Castilla
+- **Sticky Messages**: Pesan yang selalu muncul di atas channel dengan dukungan embed dan gambar
+- **Slash Commands**: Command modern dengan autocomplete dan parameter validation
+- **Story & Rules**: Sistem penyampaian latar belakang dan aturan organisasi
+- **Message Management**: Sistem penghapusan pesan dengan perlindungan sticky
+- **Permission System**: Validasi permission otomatis dengan role-based access
+- **Auto Features**: Validasi startup, protection system, dan error recovery
 
-## 📋 Commands
+## 📋 Slash Commands
 
 | Command | Deskripsi | Permission |
 |---------|-----------|------------|
-| `!helpboscastilla` | Menampilkan daftar command yang tersedia | - |
-| `!struktur` | Menampilkan struktur organisasi Castilla | - |
-| `!story` | Mengirim story latar belakang gang Castilla | - |
-| `!rulesmafia` | Menampilkan rules mafia Castilla | - |
-| `!checkperms` | Mengecek permission bot di channel saat ini | - |
-| `!sticky embed <message> [image_url]` | Membuat sticky message dengan format embed dan gambar opsional | Manage Messages |
-| `!sticky text <message> [image_url]` | Membuat sticky message dengan format teks biasa dan gambar opsional | Manage Messages |
-| `!sticky remove` | Menghapus sticky message dari channel | Manage Messages |
-| `!sticky status` | Melihat status sticky message di channel | Manage Messages |
-| `!hapus <jumlah>` | Menghapus sejumlah pesan terakhir (1-100) | Manage Messages |
-| `!hapus all` | Menghapus semua pesan di channel (dengan konfirmasi) | Manage Messages |
+| `/ms add` | Tambah member ke posisi organisasi | Commander+ |
+| `/ms remove` | Hapus member dari posisi | Commander+ |
+| `/ms update` | Update data member | Commander+ |
+| `/ms move` | Pindah member antar posisi | Commander+ |
+| `/ms search` | Cari member dalam struktur | Commander+ |
+| `/ms stats` | Statistik struktur organisasi | Commander+ |
+| `/ms list` | Daftar member di posisi tertentu | Commander+ |
+| `/ms all` | Tampilkan struktur lengkap | Commander+ |
+| `/story` | Kirim story latar belakang Castilla | Anyone |
+| `/rulesmafia` | Tampilkan rules mafia | Anyone |
+| `/purge` | Hapus sejumlah pesan (1-100) | Manage Messages |
+| `/help` | Daftar command yang tersedia | Anyone |
+| `/checkperms` | Cek permission bot di channel | Anyone |
+
+## 🔧 Traditional Commands
+
+| Command | Deskripsi | Permission |
+|---------|-----------|------------|
+| `!sticky embed <title>\|<desc>\|[image]\|[color]` | Buat sticky embed dengan gambar | Manage Messages |
+| `!sticky plain <message> [image]` | Buat sticky text dengan gambar | Manage Messages |
+| `!sticky remove` | Hapus sticky message | Manage Messages |
+| `!sticky status` | Status sticky di channel | Manage Messages |
+| `!sticky protect [on\|off]` | Toggle protection sticky | Manage Messages |
+
+## 🏗️ Struktur Organisasi Castilla
+
+### Hierarki Posisi
+
+1. **👑 Le Patron (Boss)** - 1 slot
+   - Pemimpin tertinggi keluarga Castilla
+   - Pengambil keputusan final
+
+2. **💎 La Marraine (Godmother)** - 1 slot
+   - Ibu baptis keluarga Castilla
+   - Pemegang rahasia utama
+
+3. **🎯 Le Conseiller (Advisor)** - 3 slot
+   - Penasihat keluarga Castilla
+   - Pemegang pembukuan dan keuangan
+
+4. **⚔️ Les Capitaines (Captains)** - 3 slot
+   - Kapten operasional keluarga Castilla
+   - Penanggung jawab relasi
+
+5. **💼 Les Courtiers (Brokers)** - 10 slot
+   - Perantara bisnis keluarga Castilla
+   - Informan dan pengaman
+
+6. **🔫 Les Soldats (Soldier)** - 17 slot
+   - Tentara keluarga Castilla
+   - Eksekutor lapangan
+
+7. **🤝 Les Recrues (Relasi)** - 50 slot
+   - Rekrut dan relasi keluarga Castilla
+   - Calon anggota
+
+### Fitur Manajemen Struktur
+
+- **Auto ID Generation**: ID unik otomatis untuk setiap member
+- **Role Integration**: Integrasi dengan Discord roles
+- **Search System**: Pencarian member dengan nama atau ID
+- **Statistics**: Statistik real-time kapasitas dan pengisian
+- **Move System**: Pemindahan member antar posisi
+- **Data Persistence**: Penyimpanan data permanen dengan backup
 
 ## 🛠️ Instalasi
 
@@ -35,11 +87,11 @@ Bot Discord khusus untuk server Castilla dengan fitur lengkap termasuk sticky me
 
 - Node.js versi 16.0.0 atau lebih baru
 - NPM atau Yarn package manager
-- Discord Bot Token
+- Discord Bot Token dengan permissions yang sesuai
 
 ### Langkah Instalasi
 
-1. **Clone atau download project ini**
+1. **Clone repository**
    ```bash
    git clone <repository-url>
    cd bot_dcCastilla
@@ -50,24 +102,17 @@ Bot Discord khusus untuk server Castilla dengan fitur lengkap termasuk sticky me
    npm install
    ```
 
-3. **Setup environment variables**
+3. **Setup environment**
    
-   Buat file `.env` di root directory dan isi dengan:
+   Buat file `.env`:
    ```env
    DISCORD_TOKEN=your_bot_token_here
    CLIENT_ID=your_client_id_here
    ```
 
-4. **Konfigurasi bot**
-   
-   Edit file `config.json` sesuai kebutuhan:
-   ```json
-   {
-     "prefix": "!",
-     "embedColor": "#0099ff",
-     "maxEmbedLength": 4096,
-     "protectStickyMessages": true
-   }
+4. **Deploy slash commands**
+   ```bash
+   npm run deploy
    ```
 
 5. **Jalankan bot**
@@ -75,11 +120,11 @@ Bot Discord khusus untuk server Castilla dengan fitur lengkap termasuk sticky me
    # Production
    npm start
    
-   # Development (dengan auto-reload)
+   # Development dengan auto-reload
    npm run dev
    
-   # Test syntax
-   npm test
+   # Background (Windows)
+   start_bot_invisible.vbs
    ```
 
 ## 🔧 Konfigurasi
@@ -88,302 +133,409 @@ Bot Discord khusus untuk server Castilla dengan fitur lengkap termasuk sticky me
 
 | Parameter | Deskripsi | Default |
 |-----------|-----------|---------|
-| `prefix` | Prefix untuk command bot | `"!"` |
+| `prefix` | Prefix untuk traditional commands | `"!"` |
 | `embedColor` | Warna default embed | `"#0099ff"` |
 | `maxEmbedLength` | Maksimum karakter per embed | `4096` |
-| `maxFieldLength` | Maksimum karakter per field | `1024` |
-| `maxFields` | Maksimum field per embed | `25` |
-| `errorColor` | Warna embed error | `"#ff0000"` |
 | `successColor` | Warna embed sukses | `"#00ff00"` |
+| `errorColor` | Warna embed error | `"#ff0000"` |
 | `warningColor` | Warna embed warning | `"#ffaa00"` |
+| `defaultThumbnail` | URL thumbnail default | Custom Castilla image |
+| `stickyDelay` | Delay protection sticky (ms) | `2000` |
 | `maxRetries` | Maksimum retry saat error | `3` |
-| `retryDelay` | Delay antar retry (ms) | `1000` |
-| `defaultThumbnail` | URL thumbnail default | `""` |
-| `maxStickyLength` | Maksimum karakter sticky message | `2000` |
-| `protectStickyMessages` | Aktifkan perlindungan sticky message | `true` |
-| `stickyProtectionWarning` | Pesan peringatan saat sticky dihapus | `"⚠️ Pesan sticky..."` |
+| `commandCooldown` | Cooldown default command (detik) | `3` |
+| `allowedImageDomains` | Domain gambar yang diizinkan | Array domains |
 
 ## 🏗️ Struktur Project
 
 ```
 bot_dcCastilla/
-├── commands/           # Command files
-│   ├── help.js        # Help command
-│   ├── struktur.js    # Organization structure
-│   ├── story.js       # Gang background story
-│   ├── rules.js       # Mafia rules
-│   ├── sticky.js      # Sticky message management
-│   ├── clear.js       # Message deletion
-│   └── checkperms.js  # Permission checker
-├── utils/              # Utility modules
-│   ├── embedUtils.js  # Embed utilities
-│   └── stickyManager.js # Sticky message manager
-├── data/               # Data storage
-│   └── sticky.json    # Sticky messages data
-├── config.json         # Bot configuration
-├── package.json        # Dependencies
-├── .env               # Environment variables
-├── index.js           # Main bot file
-└── README.md          # Documentation
+├── slash-commands/         # Slash command files
+│   ├── manage-struktur.js # Manajemen struktur organisasi
+│   ├── story.js          # Story latar belakang
+│   ├── rules.js          # Rules mafia
+│   ├── purge.js          # Message deletion
+│   ├── help.js           # Help command
+│   └── checkperms.js     # Permission checker
+├── commands/              # Traditional command files
+│   └── sticky.js         # Sticky message management
+├── utils/                 # Utility modules
+│   ├── strukturManager.js # Struktur organization manager
+│   ├── stickyManager.js  # Sticky message handler
+│   ├── embedUtils.js     # Embed utilities dengan pagination
+│   └── fetchPolyfill.js  # Fetch compatibility layer
+├── data/                  # Data storage
+│   ├── struktur.json     # Organization structure data
+│   └── sticky.json       # Sticky messages data
+├── config.json           # Bot configuration
+├── package.json          # Dependencies dan scripts
+├── .env                  # Environment variables
+├── index.js              # Main bot file
+├── deploy-commands.js    # Slash command deployment
+├── start_bot_invisible.vbs # Windows background starter
+└── README.md             # Documentation
 ```
 
 ## 📌 Sticky Messages
 
-### Fitur Sticky Messages
+### Fitur Lengkap
 
-- **Auto-recreation**: Sticky message otomatis muncul kembali setelah ada pesan baru
-- **Protection**: Sticky message dilindungi dari penghapusan manual
-- **Format Support**: Mendukung format embed dan plain text
-- **Image Support**: Mendukung gambar melalui URL atau upload attachment
-- **Persistence**: Data sticky tersimpan dan bertahan setelah bot restart
+- **Format Support**: Embed dan plain text
+- **Image Support**: URL dan file upload
+- **Auto Recreation**: Muncul kembali otomatis
+- **Protection System**: Dilindungi dari penghapusan
+- **Error Recovery**: Handling error dengan retry
+- **Data Persistence**: Tersimpan permanen
 
-### Cara Menggunakan
+### Penggunaan Sticky
 
 ```bash
-# Membuat sticky message dengan format embed
-!sticky embed Selamat datang di channel ini!
+# Sticky embed dengan semua parameter
+!sticky embed Welcome Message|Selamat datang di channel!|https://example.com/image.png|#ff0000
 
-# Membuat sticky message dengan format embed dan gambar
-!sticky embed Selamat datang! https://example.com/welcome.png
-
-# Membuat sticky message dengan format teks biasa
-!sticky text ```
-Format aplikasi:
+# Sticky plain text dengan gambar
+!sticky plain Format aplikasi:
+```
 Nama: [Nama IC]
 Steam Hex: [Steam Hex]
+``` https://example.com/form.png
+
+# Upload file dan buat sticky
+# 1. Upload gambar ke Discord
+# 2. Ketik command di kolom yang sama
+!sticky plain Gunakan format ini untuk aplikasi
+
+# Manajemen sticky
+!sticky status    # Lihat status
+!sticky protect on # Aktifkan protection
+!sticky remove    # Hapus sticky
 ```
-
-# Upload gambar dan buat sticky text bersamaan
-# (Upload file gambar, lalu ketik command)
-!sticky text Gunakan format ini untuk aplikasi
-
-# Melihat status sticky message
-!sticky status
-
-# Menghapus sticky message
-!sticky remove
-```
-
 ### Dukungan Gambar
 
-Sticky messages mendukung gambar dengan cara:
+- **Format**: JPG, JPEG, PNG, GIF, WEBP, SVG
+- **Sumber**: URL direct, Discord CDN, Imgur, GitHub
+- **Validasi**: Otomatis validasi URL dan content-type
+- **Fallback**: Basic validation jika network test gagal
+- **Size Limit**: 8MB maksimum (Discord limit)
 
-1. **URL Gambar**: Masukkan URL gambar langsung dalam command
-   ```bash
-   !sticky embed Welcome message! https://cdn.example.com/image.png
-   ```
+## 🔐 Permission System
 
-2. **Upload Attachment**: Upload gambar bersamaan dengan mengetik command
-   - Drag & drop gambar ke Discord
-   - Ketik command sticky dalam kolom pesan yang sama
-   - Kirim pesan
+### Bot Permissions Required
 
-3. **Format yang Didukung**: JPG, JPEG, PNG, GIF, WEBP
+| Permission | Fungsi | Required For |
+|------------|--------|--------------|
+| Send Messages | Mengirim pesan | All commands |
+| Embed Links | Mengirim embed | Most commands |
+| Manage Messages | Kelola pesan | Sticky, Purge |
+| Read Message History | Baca history | Purge, Message management |
+| Use External Emojis | Emoji eksternal | Enhanced messages |
+| Add Reactions | Tambah reaksi | Interactive features |
 
-4. **Validasi Otomatis**: Bot akan memvalidasi URL gambar dan menangani error jika gambar tidak valid
+### Role-Based Access
 
-## 🗑️ Message Management
+- **Boss/Godmother**: Full access ke semua commands
+- **Advisor/Captain**: Access ke management commands
+- **Broker/Soldier**: Limited access
+- **Recruit**: View-only commands
+- **Administrator**: Override semua restrictions
 
-### Clear Command
+## 🚀 Advanced Features
 
-Command `!hapus` memungkinkan penghapusan pesan dengan fitur:
+### Auto Features
 
-- **Batch Deletion**: Hapus hingga 100 pesan sekaligus
-- **Bulk Delete**: Hapus semua pesan dengan konfirmasi
-- **Sticky Protection**: Sticky message tidak ikut terhapus
-- **Age Handling**: Otomatis menangani pesan lama (>14 hari)
+- **Startup Validation**: Validasi data integrity saat bot start
+- **Sticky Recreation**: Auto-create sticky yang hilang
+- **Data Cleanup**: Cleanup data untuk channel yang tidak ada
+- **Memory Monitoring**: Monitor penggunaan memory
+- **Error Recovery**: Auto-recovery dari berbagai error
 
-```bash
-# Hapus 10 pesan terakhir
-!hapus 10
+### Embed Utils
 
-# Hapus semua pesan (perlu konfirmasi)
-!hapus all
+- **Long Text Splitting**: Otomatis split teks panjang
+- **Field Management**: Pagination untuk field embed
+- **Permission Checking**: Validasi permission sebelum send
+- **Quick Embed**: Template untuk success/error/warning
+- **Temporary Messages**: Auto-delete messages
+
+### Error Handling
+
+- **Comprehensive Logging**: Log semua aktivitas dan error
+- **Graceful Degradation**: Fallback untuk fitur yang gagal
+- **Rate Limit Handling**: Automatic retry dengan delay
+- **Permission Error**: Detailed permission error messages
+- **Network Error**: Fallback untuk network operations
+
+## 📊 Data Management
+
+### Struktur Data
+
+```json
+// struktur.json - Hierarki organisasi
+{
+  "positions": {
+    "boss": {
+      "name": "👑 Le Patron (Boss)",
+      "members": [...],
+      "maxMembers": 1,
+      "description": "..."
+    }
+  },
+  "metadata": {
+    "lastUpdated": timestamp,
+    "version": "1.0.0",
+    "totalMembers": number
+  }
+}
+
+// sticky.json - Sticky messages per channel
+{
+  "channelId": {
+    "messageId": "...",
+    "type": "embed|plain",
+    "content": "...",
+    "image": "url|null",
+    "authorId": "...",
+    "createdAt": timestamp,
+    "lastUpdated": timestamp,
+    "protected": boolean,
+    "errorCount": number,
+    "disabled": boolean
+  }
+}
 ```
 
-## 📚 Membuat Command Baru
+### Backup & Recovery
 
-1. Buat file baru di folder `commands/`
-2. Gunakan template berikut:
+- **Auto Backup**: Backup data sebelum modifikasi
+- **Integrity Check**: Validasi data saat startup
+- **Recovery Mode**: Restore dari backup jika data corrupt
+- **Version Migration**: Auto-migrate data structure
+
+## 🎯 Use Cases
+
+### Manajemen Organisasi
+
+```bash
+# Tambah member baru
+/ms add position:captain name:"Jack Castilla" user:@jack
+
+# Promosi member
+/ms move from_position:soldier to_position:broker member_id:sol_john_doe
+
+# Cek statistik
+/ms stats
+
+# Lihat struktur lengkap
+/ms all
+```
+
+### Channel Management
+
+```bash
+# Setup sticky informasi
+!sticky embed INFO|Jangan lupa beli bandage!||#00ff00
+
+# Setup sticky form aplikasi
+!sticky plain Isi form ini:
+```
+Nama:
+Steam Hex:
+```
+# Cleanup channel
+/purge amount:50
+```
+
+### Roleplay Features
+
+```bash
+# Kirim story background
+/story
+
+# Tampilkan rules mafia
+/rulesmafia
+
+# Cek permission untuk troubleshooting
+/checkperms
+```
+
+## 🔧 Development
+
+### Menambah Slash Command
+
+1. Buat file di `slash-commands/`
+2. Gunakan template:
 
 ```javascript
-const { EmbedBuilder, PermissionFlagsBits } = require('discord.js');
-const config = require('../config.json');
+// filepath: slash-commands/newcommand.js
+const { SlashCommandBuilder } = require('discord.js');
 
 module.exports = {
+    data: new SlashCommandBuilder()
+        .setName('newcommand')
+        .setDescription('Description here')
+        .addStringOption(option =>
+            option.setName('parameter')
+                .setDescription('Parameter description')
+                .setRequired(true)),
+
+    async execute(interaction) {
+        // Command logic
+        await interaction.reply('Response');
+    }
+};
+```
+3. Deploy commands: `npm run deploy`
+
+### Menambah Traditional Command
+
+1. Buat file di `commands/`
+2. Gunakan template:
+
+```javascript
+// filepath: commands/newcommand.js
+module.exports = {
     name: 'commandname',
-    description: 'Deskripsi command',
+    description: 'Command description',
     async execute(message, args, client) {
-        // Check permissions
-        const botPermissions = message.channel.permissionsFor(message.guild.members.me);
-        const requiredPerms = [PermissionFlagsBits.SendMessages, PermissionFlagsBits.EmbedLinks];
-
-        if (!botPermissions.has(requiredPerms)) {
-            return message.reply('❌ Bot tidak memiliki permission yang diperlukan!');
-        }
-
-        try {
-            // Command logic here
-            const embed = new EmbedBuilder()
-                .setTitle('Command Title')
-                .setDescription('Command content')
-                .setColor(config.embedColor);
-
-            await message.channel.send({ embeds: [embed] });
-        } catch (error) {
-            console.error('Error in command:', error);
-            await message.reply('❌ Terjadi error!');
-        }
+        // Command logic
+        await message.reply('Response');
     }
 };
 ```
 
-3. Bot akan otomatis memuat command baru saat restart
-
-## 🔐 Permissions
-
-Bot memerlukan permissions berikut:
-
-### Required Permissions
-- **Send Messages**: Mengirim pesan
-- **Embed Links**: Mengirim embed
-- **Read Message History**: Membaca history pesan
-- **Use External Emojis**: Menggunakan emoji eksternal
-- **Add Reactions**: Menambah reaksi
-
-### Administrative Permissions
-- **Manage Messages**: Mengelola pesan (untuk sticky dan clear commands)
-
-## 🔧 Utilities
-
-### EmbedUtils
-
-Utility class untuk menangani embed dengan fitur:
-- **Long Text Splitting**: Otomatis memecah teks panjang
-- **Permission Checking**: Validasi permission sebelum mengirim
-- **Field Management**: Mengelola field embed dengan pagination
-- **Error Handling**: Retry logic untuk mengatasi rate limits
-
-### StickyManager
-
-Manager class untuk sticky messages dengan fitur:
-- **Data Persistence**: Menyimpan data sticky ke JSON
-- **Message Recreation**: Otomatis membuat ulang sticky yang dihapus
-- **Integrity Validation**: Validasi dan perbaikan data sticky saat startup
-- **Bulk Operations**: Menangani penghapusan massal
-
 ## 🐛 Troubleshooting
 
-### Bot tidak merespon command
-1. Cek apakah bot online di server Discord
-2. Pastikan prefix sesuai dengan konfigurasi (`!`)
-3. Cek permission bot di channel dengan `!checkperms`
-4. Lihat console untuk error messages
+### Common Issues
 
-### Sticky message tidak bekerja
-1. Pastikan bot memiliki permission "Manage Messages"
-2. Cek file `data/sticky.json` apakah ada data corrupt
-3. Restart bot untuk memvalidasi ulang sticky data
-4. Gunakan `!sticky status` untuk cek status
+| Issue | Cause | Solution |
+|-------|-------|----------|
+| Bot tidak respond | Permission atau token | Cek `/checkperms` dan .env |
+| Slash commands tidak muncul | Belum deploy | Jalankan `npm run deploy` |
+| Sticky tidak bekerja | Permission Manage Messages | Berikan permission ke bot |
+| Struktur data corrupt | File JSON rusak | Restart bot untuk auto-recovery |
+| Memory leak | Long running process | Restart bot secara berkala |
 
-### Error "Missing Permissions"
-1. Gunakan command `!checkperms` untuk mengecek permission
-2. Minta admin server untuk memberikan permission yang diperlukan
-3. Pastikan bot role berada di atas role target (untuk moderation)
+### Debug Mode
 
-### Clear command tidak bekerja
-1. Pastikan user memiliki permission "Manage Messages"
-2. Pastikan bot memiliki permission "Manage Messages" dan "Read Message History"
-3. Discord hanya bisa hapus pesan bulk yang umurnya <14 hari
+```bash
+# Enable debug logging
+NODE_ENV=development npm start
 
-## 📊 Data Storage
+# Test command syntax
+npm test
 
-Bot menggunakan sistem penyimpanan file JSON:
+# Check slash command registration
+npm run deploy
+```
 
-- `data/sticky.json`: Menyimpan data sticky messages per channel
-- Auto-backup saat startup
-- Validasi integrity saat bot restart
-- Cleanup otomatis untuk channel yang tidak ada
+### Performance Monitoring
 
-## 📝 Logs
+- Memory usage check setiap 5 menit
+- Command execution logging
+- Error rate monitoring
+- Sticky message recreation tracking
 
-Bot akan menampilkan log berikut:
+## 📈 Statistics & Monitoring
 
-- `✅ Bot [BotName] telah online!` - Bot berhasil login
-- `📊 Loaded X commands` - Jumlah command yang dimuat
-- `🔧 Executing command: [command]` - Command sedang dieksekusi
-- `🛡️ Sticky message deleted, recreating...` - Sticky message dilindungi
-- `✅ Sticky data integrity validated` - Validasi data sticky berhasil
+### Bot Metrics
 
-## 🔄 Auto Features
+- Total commands executed
+- Error rate per command
+- Memory usage trends
+- Uptime statistics
+- Guild and user count
 
-### Startup Validation
-- Validasi sticky message integrity
-- Recreate sticky messages yang hilang
-- Cleanup data untuk channel yang tidak ada
+### Organization Metrics
 
-### Runtime Protection
-- Melindungi sticky message dari penghapusan
-- Auto-recreation saat sticky dihapus
-- Handling bulk deletion
+- Member distribution per position
+- Promotion/demotion history
+- Activity tracking
+- Role compliance
 
-## 🤝 Contributing
+## 🔄 Updates & Maintenance
 
-1. Fork repository ini
-2. Buat branch baru untuk fitur (`git checkout -b feature/AmazingFeature`)
-3. Commit perubahan (`git commit -m 'Add some AmazingFeature'`)
-4. Push ke branch (`git push origin feature/AmazingFeature`)
-5. Buat Pull Request
+### Regular Maintenance
 
-### Guidelines
+- **Data Backup**: Weekly automatic backup
+- **Log Rotation**: Monthly log cleanup
+- **Performance Review**: Check memory and response times
+- **Permission Audit**: Review bot permissions
 
-- Gunakan JSDoc untuk dokumentasi function
-- Implementasikan error handling yang proper
-- Test semua fitur sebelum commit
-- Update README jika menambah fitur baru
+### Update Process
 
-## 📄 License
+1. Stop bot gracefully
+2. Backup current data
+3. Update code/dependencies
+4. Test in development
+5. Deploy slash commands if needed
+6. Restart bot
 
-Project ini menggunakan lisensi MIT. Lihat file `LICENSE` untuk detail.
+## 📝 Changelog
 
-## 📞 Support
+### v3.0.0 (Latest)
+- **NEW**: Complete structure management system with slash commands
+- **NEW**: Advanced autocomplete for member selection
+- **NEW**: Role-based permission system
+- **NEW**: Enhanced error handling and recovery
+- **IMPROVED**: Sticky message system with better image support
+- **IMPROVED**: Data persistence and integrity checking
+- **IMPROVED**: Performance monitoring and memory management
 
-Jika ada pertanyaan atau butuh bantuan:
+### v2.1.0
+- Added image support for sticky messages
+- Enhanced validation and error handling
+- Improved documentation and examples
+- Better modular structure
 
-1. Buat issue di repository ini
-2. Contact developer melalui Discord
-3. Baca dokumentasi Discord.js: https://discord.js.org/
-
-## 🔄 Changelog
+### v2.0.0
+- Introduced slash commands system
+- Added embed utilities with pagination
+- Enhanced permission checking
+- Improved startup validation
 
 ### v1.0.0
 - Initial release
 - Basic command system
-- Embed utilities
-- Permission checking
-- Error handling
+- Sticky message foundation
+- Traditional commands only
 
-### v1.1.0
-- Added sticky message system
-- Added message management (clear command)
-- Added sticky message protection
-- Improved error handling
-- Added data persistence
+## 📞 Support
 
-### v1.2.0
-- Enhanced sticky message manager
-- Added bulk deletion handling
-- Improved permission checking
-- Added startup validation
-- Better modular structure
+### Getting Help
 
-### v1.3.0
-- **NEW**: Added image support for sticky messages
-- Support for URL images and file attachments
-- Image validation and error handling
-- Enhanced sticky status display with image preview
-- Updated documentation and examples
+1. **Documentation**: Baca README lengkap
+2. **GitHub Issues**: Report bugs atau request features
+3. **Discord Support**: Contact developer di server
+4. **Community**: Discord.js documentation dan community
+
+### Contributing
+
+1. Fork repository
+2. Create feature branch
+3. Make changes dengan proper testing
+4. Update documentation
+5. Submit pull request
+
+### Guidelines
+
+- Gunakan JSDoc untuk dokumentasi
+- Implement comprehensive error handling
+- Test semua fitur sebelum commit
+- Follow existing code style
+- Update README untuk fitur baru
+
+## 📄 License
+
+Project ini menggunakan lisensi MIT. Lihat file `LICENSE` untuk detail lengkap.
+
+## 🏆 Credits
+
+**Made with ❤️ for Castilla Discord Server**
+
+- **Developer**: Bot development team
+- **Community**: Castilla server members
+- **Inspiration**: Discord.js community dan documentation
+- **Special Thanks**: Beta testers dan feedback contributors
 
 ---
 
-**Made with ❤️ for Castilla Discord Server**
+*Bot ini dikembangkan khusus untuk kebutuhan roleplay mafia server Discord Castilla dengan fitur-fitur yang disesuaikan untuk gameplay dan manajemen komunitas.*

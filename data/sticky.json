@@ -1,45 +1,83 @@
 {
-  "1382421696211976293": {
-    "messageId": "1383149477845532854",
-    "content": "**Channel ini berfungsi agar jika ada rapat IC/OOC, segala sesuatu yang sudah diputuskan akan dicatat disini.**",
-    "authorId": "403174107904081933",
-    "createdAt": 1749794724646
-  },
   "1381996083076661350": {
-    "messageId": "1383040063776096387",
-    "content": "```\nKeperluan :\nJenis Uang (PUTIH/MERAH) :\nWithdraw/Deposit :\nBefore :\nAfter :\n```\n**SERTAKAN FOTO**",
+    "messageId": "1384119126972305531",
+    "type": "plain",
+    "content": "\n```\nKeperluan :\nJenis Uang (PUTIH/MERAH) :\nWithdraw/Deposit :\nBefore :\nAfter :\n```\n**SERTAKAN FOTO**",
+    "image": null,
     "authorId": "403174107904081933",
-    "createdAt": 1749812839429,
-    "isPlainText": true
-  },
-  "1382428149391953930": {
-    "messageId": "1383164141505876120",
-    "content": "```\nNama Barang :\nDeposit/Withdraw :\nBefore :\nAfter :\n```\n**SERTAKAN FOTO**",
-    "authorId": "403174107904081933",
-    "createdAt": 1749813170964,
-    "isPlainText": true,
-    "lastRecreated": 1749842421470
-  },
-  "1382427649485312082": {
-    "messageId": "1383041798909464787",
-    "content": "```Nama Barang :\nDeposit/Withdraw :\nJumlah :```",
-    "authorId": "403174107904081933",
-    "createdAt": 1749813253230,
-    "isPlainText": true
-  },
-  "1383159361022459934": {
-    "messageId": "1383159845917556907",
-    "content": "```\nNama : Fulan\nSteam Hex : \nPJ Relasi : Biru/Matteo\n``` **Diisi jika sudah diacc oleh Captains**",
-    "authorId": "403174107904081933",
-    "createdAt": 1749841397270,
-    "isPlainText": true
+    "createdAt": 1750070097384,
+    "lastUpdated": 1750070097384,
+    "protected": false,
+    "errorCount": 0,
+    "disabled": false
   },
   "1381949017780518995": {
-    "messageId": "1383166973340291233",
-    "content": "Buat sini kalau ke kota jangan lupa nama passport di ganti **Castilla - Nama** biar admin tau aktivitas kita ngapain di moxie thanks 🥰Cara ganti passportnya tekan GEAR di tampilan awal fivem di sebelah kanan atas > terus masukkan Player name sesuai yang diatas",
-    "imageUrl": "https://cdn.discordapp.com/attachments/1381949017780518995/1382269077975863296/image.png?ex=684d2ce5&is=684bdb65&hm=8158e1a8b2a8e91b1656fedbf706bcaec660be66c0dccc5f9545721f44722920&",
+    "messageId": "1384815572998422571",
+    "type": "embed",
+    "content": "JANGAN LUPA BELI BANDAGE/FIRST AID, 1 BANDAGE 35rb Max beli 5, 1 First aid 75rb",
+    "title": "INFO",
+    "image": null,
+    "color": "#0099ff",
+    "timestamp": true,
     "authorId": "403174107904081933",
-    "createdAt": 1749843096553,
-    "isPlainText": true
+    "createdAt": 1750102654573,
+    "lastUpdated": 1750236122379,
+    "protected": false,
+    "errorCount": 0,
+    "disabled": false
+  },
+  "1383159361022459934": {
+    "messageId": "1384583326588735568",
+    "type": "plain",
+    "content": "** ISI INI SETELAH DISETUJUI OLEH CAPTAINS**\n```\nNama : \nSteam Hex :\nPJ RELASI : BIRU/MATTHEO/JACK\n```",
+    "image": null,
+    "authorId": "403174107904081933",
+    "createdAt": 1750180734304,
+    "lastUpdated": 1750180759703,
+    "protected": false,
+    "errorCount": 0,
+    "disabled": false
+  },
+  "1381956142573420607": {
+    "messageId": "1384636375088890039",
+    "type": "embed",
+    "content": "1. Gunakan sapaan formal:\n - Untuk pria: Tuan atau Sir\n - Untuk wanita: Nona, Madam, atau Mam\n2. Saat perkenalan, lakukan gerakan bow (/e bow) lalu ucapkan:\n> “Perkenalkan Tuan dan Nona, saya [nama]. Senang berkenalan dengan Anda.”\n3. Bersikap elegan. Hindari sikap kasar atau terburu-buru saat bertemu orang.\n4. Saat bicara dengan Boss, Godmother, atau Advisor, bersikap serius dan langsung ke inti masalah.\n5. Setiap kali selesai Negosiasi Perampokan apapun, ucapkan:\n> “Nous sommes partis ici, la base de la police perdue.”\n> (Artinya: Kami pergi dari sini, dasar polisi pecundang.)\n6. Tidak semua harus bergaya mafia, tapi sebaiknya dipelajari agar RP lebih maksimal.\n7. Utamakan aturan mafia di atas hukum polisi.\n8. Improvisasi diperbolehkan selama masih masuk akal dan bisa dipertanggungjawabkan.\n9. Jangan meninggalkan cerita tanpa konfirmasi terlebih dahulu.\n10. Bedakan perilaku antar kelompok dan keluarga. Keduanya punya ikatan, tapi jalannya berbeda.",
+    "title": "Culture Life Mafia",
+    "image": null,
+    "color": "#0099ff",
+    "timestamp": true,
+    "authorId": "403174107904081933",
+    "createdAt": 1750193407291,
+    "lastUpdated": 1750193407291,
+    "protected": false,
+    "errorCount": 0,
+    "disabled": false
+  },
+  "1384811410122342441": {
+    "messageId": "1384811902760124488",
+    "type": "plain",
+    "content": "**Surat Izin**\n```\nNama :\nDurasi :\nReason :\nNote :\n```\nAkan di evaluasi setiap minggu",
+    "image": null,
+    "authorId": "403174107904081933",
+    "createdAt": 1750235247294,
+    "lastUpdated": 1750235247294,
+    "protected": false,
+    "errorCount": 0,
+    "disabled": false
+  },
+  "1381946683453210766": {
+    "messageId": "1384820277065814157",
+    "type": "embed",
+    "content": "**Le Patron (Boss)**\n- Pemimpin tertinggi atas semua kegiatan dan bisnis.\n- Penanggung jawab atas semua yang ada di kelompok.\n- Negosiator Utama atas semua kegiatan.\n- Pengambil keputusan final atas semua urusan.\n**La Marraine (Godmother)**\n- Pemimpin tertinggi atas semua bisnis dan pembukuan.\n- Penanggung jawab atas semua bisnis.\n- Negosiator Utama dalam bisnis.\n- Pemegang informasi/rahasia utama dari internal/eksternal.\n- Pengambil keputusan final atas semua urusan.\n**Le Conseiller (Advisor)**\n- Penasehat utama atas semua kegiatan dan bisnis.\n- Pemegang utama pembukuan dan keuangan.\n- Bagian komando dalam bisnis.\n- Penanggung jawab atas semua anggota.\n- Pengambil keputusan final atas semua urusan jika Boss dan Godmother tidak ada.\n- Negosiator cadangan jika Boss dan Godmother tidak ada.\n**Les Capitaines (Captains)**\n- Penanggung jawab atas Relasi.\n- Bagian komando dalam kegiatan.\n- Pemberi saran untuk kegiatan dan bisnis.\n- Pengambil keputusan final atas semua urusan jika Boss, Godmother dan Advisor tidak ada.\n- Negosiator cadangan jika Boss, Godmother dan Advisor tidak ada.\n**Les Courtiers (Brokers)**\n- Informan dalam kegiatan dan bisnis.\n- Perantara dalam urusan bisnis.\n- Membantu dan menjalankan kegiatan dan bisnis.\n- Ikut mengawasi Relasi.\n- Bertanggung jawab atas keamanan Boss, Godmother dan Advisor.\n- Pemberi saran untuk kegiatan dan bisnis.\n**Les Soldats (Soldier)**\n- Mengamankan kondisi dan situasi ketika kegiatan dan urusan bisnis.\n- Ikut Mengawasi Relasi.\n- Bertanggung jawab atas keamanan Boss, Godmother, Advisor dan Captains.\n- Bekerja kotor membantu urusan kegiatan.\n- Informan dalam urusan kegiatan.",
+    "title": "JOBDESC CASTILLA",
+    "image": null,
+    "color": "#0099ff",
+    "timestamp": true,
+    "authorId": "403174107904081933",
+    "createdAt": 1750237032793,
+    "lastUpdated": 1750237243866,
+    "protected": false,
+    "errorCount": 0,
+    "disabled": false
   }
 }

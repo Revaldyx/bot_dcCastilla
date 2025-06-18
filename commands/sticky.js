@@ -1,18 +1,12 @@
 const { EmbedBuilder, PermissionFlagsBits } = require('discord.js');
 const config = require('../config.json');
+const StickyManager = require('../utils/stickyManager');
+const EmbedUtils = require('../utils/embedUtils');
 const fs = require('fs');
 const path = require('path');
 
-// File to store sticky messages data
 const stickyDataPath = path.join(__dirname, '..', 'data', 'sticky.json');
 
-// Ensure data directory exists
-const dataDir = path.dirname(stickyDataPath);
-if (!fs.existsSync(dataDir)) {
-    fs.mkdirSync(dataDir, { recursive: true });
-}
-
-// Load sticky data
 function loadStickyData() {
     try {
         if (fs.existsSync(stickyDataPath)) {
@@ -24,9 +18,12 @@ function loadStickyData() {
     return {};
 }
 
-// Save sticky data
 function saveStickyData(data) {
     try {
+        const dataDir = path.dirname(stickyDataPath);
+        if (!fs.existsSync(dataDir)) {
+            fs.mkdirSync(dataDir, { recursive: true });
+        }
         fs.writeFileSync(stickyDataPath, JSON.stringify(data, null, 2));
     } catch (error) {
         console.error('Error saving sticky data:', error);
@@ -35,308 +32,333 @@ function saveStickyData(data) {
 
 module.exports = {
     name: 'sticky',
-    description: 'Kelola sticky message di channel (embed/text/remove/status) dengan dukungan gambar',
-    async execute(message, args) {
-        // Check if user has manage messages permission
+    description: 'Kelola sticky message di channel. Format: !sticky [embed|plain|remove|status|protect] ...',
+    async execute(message, args, client) {
+        // Permission check
         if (!message.member.permissions.has(PermissionFlagsBits.ManageMessages)) {
             return message.reply('❌ Kamu butuh permission **Manage Messages** untuk menggunakan command ini!');
         }
 
-        // Check bot permissions
         const botPermissions = message.channel.permissionsFor(message.guild.members.me);
-        const requiredPerms = [PermissionFlagsBits.SendMessages, PermissionFlagsBits.EmbedLinks, PermissionFlagsBits.ManageMessages];
-
+        const requiredPerms = [
+            PermissionFlagsBits.SendMessages,
+            PermissionFlagsBits.EmbedLinks,
+            PermissionFlagsBits.ManageMessages
+        ];
         if (!botPermissions.has(requiredPerms)) {
             return message.reply('❌ Bot butuh permission **Send Messages**, **Embed Links**, dan **Manage Messages**!');
         }
 
-        const subCommand = args[0]?.toLowerCase();
+        const sub = (args[0] || '').toLowerCase();
         const channelId = message.channel.id;
         const stickyData = loadStickyData();
 
-        if (!subCommand) {
-            const embed = new EmbedBuilder()
-                .setTitle('📌 Sticky Message Commands')
-                .setDescription('**Usage:**\n`!sticky embed <message> [image_url]` - Set sticky message (embed) dengan gambar opsional\n`!sticky text <message> [image_url]` - Set sticky message (plain text) dengan gambar opsional\n`!sticky remove` - Remove sticky message\n`!sticky status` - Check sticky status\n\n**Image Support:**\n- Gunakan URL gambar langsung\n- Atau upload gambar bersamaan dengan command\n- Format yang didukung: JPG, PNG, GIF, WEBP')
-                .addFields(
-                    {
-                        name: 'Contoh dengan URL gambar:',
-                        value: '`!sticky embed Selamat datang! https://example.com/image.png`',
-                        inline: false
-                    },
-                    {
-                        name: 'Contoh dengan upload gambar:',
-                        value: 'Upload gambar dan ketik: `!sticky text Pesan sticky dengan gambar`',
-                        inline: false
-                    }
-                )
-                .setColor(config.embedColor)
-                .setFooter({ text: 'Sticky messages will repost automatically when new messages are sent' });
+        if (sub === 'embed') {
+            // !sticky embed <title>|<desc>|[image]|[color]
+            const input = args.slice(1).join(' ').split('|');
+            const title = input[0] || '📌 Sticky Message';
+            const desc = input[1] || '';
+            const image = input[2] || null;
+            const color = input[3] || config.embedColor;
 
-            return message.channel.send({ embeds: [embed] });
-        }
-
-        // Helper function to extract image URL from message or attachments
-        function extractImageUrl(messageContent, attachments) {
-            // Check for image URL in message content
-            const urlRegex = /(https?:\/\/[^\s]+\.(?:jpg|jpeg|png|gif|webp)(?:\?[^\s]*)?)/i;
-            const urlMatch = messageContent.match(urlRegex);
-
-            if (urlMatch) {
-                return urlMatch[1];
-            }
-
-            // Check for image attachments
-            if (attachments && attachments.size > 0) {
-                const imageAttachment = attachments.find(att =>
-                    att.contentType && att.contentType.startsWith('image/')
-                );
-                if (imageAttachment) {
-                    return imageAttachment.url;
-                }
-            }
-
-            return null;
-        }
-
-        // Helper function to remove image URL from message content
-        function removeImageUrlFromContent(content) {
-            const urlRegex = /(https?:\/\/[^\s]+\.(?:jpg|jpeg|png|gif|webp)(?:\?[^\s]*)?)/i;
-            return content.replace(urlRegex, '').trim();
-        }
-
-        switch (subCommand) {
-            case 'embed': {
-                let stickyMessage = args.slice(1).join(' ');
-                if (!stickyMessage && message.attachments.size === 0) {
-                    return message.reply('❌ Masukkan pesan yang ingin dijadikan sticky!\nContoh: `!sticky embed Selamat datang di channel ini!`\nAtau upload gambar bersamaan dengan pesan.');
-                }
-
-                // Extract image URL
-                const imageUrl = extractImageUrl(stickyMessage, message.attachments);
-
-                // Remove image URL from content if found in text
-                if (imageUrl && stickyMessage.includes(imageUrl)) {
-                    stickyMessage = removeImageUrlFromContent(stickyMessage);
-                }
-
-                // If no text content and only image, set default message
-                if (!stickyMessage && imageUrl) {
-                    stickyMessage = 'Sticky Message';
-                }
-
-                // Create sticky message embed
-                const stickyEmbed = new EmbedBuilder()
-                    .setTitle('📌 Sticky Message')
-                    .setDescription(stickyMessage)
-                    .setColor(config.embedColor)
-                    .setTimestamp();
-
-                // Add image if provided
-                if (imageUrl) {
-                    stickyEmbed.setImage(imageUrl);
-                }
-
-                try {
-                    // Send the sticky message
-                    const sentMessage = await message.channel.send({ embeds: [stickyEmbed] });
-
-                    // Save sticky data (embed format)
-                    stickyData[channelId] = {
-                        messageId: sentMessage.id,
-                        content: stickyMessage,
-                        imageUrl: imageUrl || null,
-                        authorId: message.author.id,
-                        createdAt: Date.now(),
-                        isPlainText: false
-                    };
-                    saveStickyData(stickyData);
-
-                    // Delete the command message
+            if (!desc) {
+                const errorMsg = await message.reply('❌ Deskripsi sticky tidak boleh kosong!');
+                setTimeout(async () => {
                     try {
-                        await message.delete();
+                        await errorMsg.delete();
                     } catch (error) {
-                        console.log('Could not delete command message:', error.message);
+                        console.warn('Could not delete error notification:', error);
                     }
-
-                    // Send confirmation in DM or temporary message
-                    try {
-                        await message.author.send(`✅ Sticky message (embed) berhasil diset di channel #${message.channel.name}!`);
-                    } catch (dmError) {
-                        const confirmMsg = await message.channel.send(`✅ Sticky message (embed) berhasil diset oleh ${message.author}!`);
-                        setTimeout(() => confirmMsg.delete().catch(() => { }), 5000);
-                    }
-
-                } catch (error) {
-                    console.error('Error setting sticky message:', error);
-                    if (error.code === 50035) {
-                        return message.reply('❌ URL gambar tidak valid atau tidak dapat diakses!');
-                    }
-                    return message.reply('❌ Gagal membuat sticky message!');
-                }
-                break;
+                }, 3000);
+                return;
             }
 
-            case 'text': {
-                let stickyMessage = args.slice(1).join(' ');
-                if (!stickyMessage && message.attachments.size === 0) {
-                    return message.reply('❌ Masukkan pesan yang ingin dijadikan sticky!\nContoh: `!sticky text Selamat datang di channel ini!`\nAtau upload gambar bersamaan dengan pesan.');
-                }
-
-                // Extract image URL
-                const imageUrl = extractImageUrl(stickyMessage, message.attachments);
-
-                // Remove image URL from content if found in text
-                if (imageUrl && stickyMessage.includes(imageUrl)) {
-                    stickyMessage = removeImageUrlFromContent(stickyMessage);
-                }
-
-                console.log('Setting text sticky message:', stickyMessage);
-                console.log('Image URL:', imageUrl);
-
-                // Handle code blocks - preserve formatting inside code blocks but clean up outside
-                const codeBlockRegex = /```[\s\S]*?```|`[^`]*`/g;
-                const codeBlocks = [];
-                let tempMessage = stickyMessage;
-
-                // Extract code blocks temporarily
-                tempMessage = tempMessage.replace(codeBlockRegex, (match, index) => {
-                    codeBlocks.push(match);
-                    return `__CODEBLOCK_${codeBlocks.length - 1}__`;
-                });
-
-                // Clean up excessive spaces outside code blocks
-                tempMessage = tempMessage.replace(/\s+/g, ' ').trim();
-
-                // Restore code blocks
-                codeBlocks.forEach((block, index) => {
-                    tempMessage = tempMessage.replace(`__CODEBLOCK_${index}__`, block);
-                });
-
-                stickyMessage = tempMessage;
-
-                if (stickyMessage.length > config.maxStickyLength) {
-                    return message.reply(`❌ Pesan terlalu panjang! Maksimal ${config.maxStickyLength} karakter.`);
-                }
-
-                try {
-                    // Prepare message content
-                    let messageContent = stickyMessage;
-                    let messageOptions = { content: messageContent };
-
-                    // Add image as embed if provided (for text sticky with image)
-                    if (imageUrl) {
-                        const imageEmbed = new EmbedBuilder()
-                            .setImage(imageUrl)
-                            .setColor(config.embedColor);
-                        messageOptions.embeds = [imageEmbed];
-                    }
-
-                    // Send the sticky message
-                    const sentMessage = await message.channel.send(messageOptions);
-
-                    // Save sticky data (plain text format) with image
-                    stickyData[channelId] = {
-                        messageId: sentMessage.id,
-                        content: stickyMessage,
-                        imageUrl: imageUrl || null,
-                        authorId: message.author.id,
-                        createdAt: Date.now(),
-                        isPlainText: true
-                    };
-                    saveStickyData(stickyData);
-
-                    console.log('Text sticky data saved:', stickyData[channelId]);
-
-                    // Delete the command message
+            if (image && !StickyManager.validateImageUrl(image)) {
+                const errorMsg = await message.reply('❌ URL gambar tidak valid!');
+                setTimeout(async () => {
                     try {
-                        await message.delete();
+                        await errorMsg.delete();
                     } catch (error) {
-                        console.log('Could not delete command message:', error.message);
+                        console.warn('Could not delete error notification:', error);
                     }
-
-                    // Send confirmation in DM or temporary message
-                    try {
-                        await message.author.send(`✅ Sticky message (text) berhasil diset di channel #${message.channel.name}!`);
-                    } catch (dmError) {
-                        const confirmMsg = await message.channel.send(`✅ Sticky message (text) berhasil diset oleh ${message.author}!`);
-                        setTimeout(() => confirmMsg.delete().catch(() => { }), 5000);
-                    }
-
-                } catch (error) {
-                    console.error('Error setting text sticky message:', error);
-                    if (error.code === 50035) {
-                        return message.reply('❌ URL gambar tidak valid atau tidak dapat diakses!');
-                    }
-                    return message.reply('❌ Gagal membuat sticky message!');
-                }
-                break;
+                }, 3000);
+                return;
             }
 
-            case 'remove': {
-                if (!stickyData[channelId]) {
-                    return message.reply('❌ Tidak ada sticky message di channel ini!');
-                }
-
-                try {
-                    // Try to delete the sticky message
-                    const channel = message.channel;
-                    const stickyMessageId = stickyData[channelId].messageId;
-
+            // Send embed sticky
+            try {
+                if (stickyData[channelId]) {
+                    // Remove old sticky
                     try {
-                        const stickyMessage = await channel.messages.fetch(stickyMessageId);
-                        await stickyMessage.delete();
-                    } catch (fetchError) {
-                        console.log('Sticky message already deleted or not found');
-                    }
-
-                    // Remove from data
-                    delete stickyData[channelId];
-                    saveStickyData(stickyData);
-
-                    await message.reply('✅ Sticky message berhasil dihapus!');
-
-                } catch (error) {
-                    console.error('Error removing sticky message:', error);
-                    return message.reply('❌ Gagal menghapus sticky message!');
+                        const oldMsg = await message.channel.messages.fetch(stickyData[channelId].messageId);
+                        await oldMsg.delete();
+                    } catch { }
                 }
-                break;
-            }
-
-            case 'status': {
-                if (!stickyData[channelId]) {
-                    return message.reply('❌ Tidak ada sticky message di channel ini!');
-                }
-
-                const sticky = stickyData[channelId];
-                const author = await message.client.users.fetch(sticky.authorId).catch(() => null);
-                const createdAt = new Date(sticky.createdAt);
 
                 const embed = new EmbedBuilder()
-                    .setTitle('📌 Sticky Message Status')
-                    .addFields(
-                        { name: 'Channel', value: `#${message.channel.name}`, inline: true },
-                        { name: 'Type', value: sticky.isPlainText ? 'Text' : 'Embed', inline: true },
-                        { name: 'Author', value: author ? author.tag : 'Unknown', inline: true },
-                        { name: 'Created', value: `<t:${Math.floor(createdAt.getTime() / 1000)}:R>`, inline: true },
-                        { name: 'Has Image', value: sticky.imageUrl ? 'Yes' : 'No', inline: true },
-                        { name: 'Content', value: sticky.content.length > 1000 ? sticky.content.substring(0, 1000) + '...' : sticky.content }
-                    )
-                    .setColor(config.embedColor)
-                    .setTimestamp();
+                    .setTitle(title)
+                    .setDescription(desc)
+                    .setColor(color);
 
-                // Show image preview if available
-                if (sticky.imageUrl) {
-                    embed.setThumbnail(sticky.imageUrl);
-                    embed.addFields({ name: 'Image URL', value: sticky.imageUrl, inline: false });
+                if (image) embed.setImage(image);
+                embed.setFooter({ text: 'Pesan ini akan selalu muncul di atas' }).setTimestamp();
+
+                const sent = await message.channel.send({ embeds: [embed] });
+
+                stickyData[channelId] = {
+                    messageId: sent.id,
+                    type: 'embed',
+                    content: desc,
+                    title,
+                    image,
+                    color,
+                    timestamp: true,
+                    authorId: message.author.id,
+                    createdAt: Date.now(),
+                    lastUpdated: Date.now(),
+                    protected: false,
+                    errorCount: 0,
+                    disabled: false
+                };
+                saveStickyData(stickyData);
+
+                // Delete user's command message
+                try {
+                    await message.delete();
+                } catch (error) {
+                    console.warn('Could not delete command message:', error);
                 }
 
-                await message.channel.send({ embeds: [embed] });
-                break;
+                // Send notification and delete after 3 seconds
+                const notification = await message.channel.send(`✅ Sticky embed berhasil diset!\n🔗 [Jump to message](${sent.url})`);
+                setTimeout(async () => {
+                    try {
+                        await notification.delete();
+                    } catch (error) {
+                        console.warn('Could not delete notification:', error);
+                    }
+                }, 3000);
+            } catch (err) {
+                console.error('Sticky embed error:', err);
+                const errorMsg = await message.reply('❌ Gagal membuat sticky embed!');
+                setTimeout(async () => {
+                    try {
+                        await errorMsg.delete();
+                    } catch (error) {
+                        console.warn('Could not delete error notification:', error);
+                    }
+                }, 3000);
+            }
+        } else if (sub === 'plain') {
+            // !sticky plain <pesan> [image]
+            const content = args.slice(1).join(' ');
+            const imageMatch = content.match(/(https?:\/\/\S+\.(?:png|jpg|jpeg|gif|webp))/i);
+            const image = imageMatch ? imageMatch[0] : null;
+            const text = image ? content.replace(image, '').trim() : content;
+
+            if (!text) {
+                const errorMsg = await message.reply('❌ Pesan sticky tidak boleh kosong!');
+                setTimeout(async () => {
+                    try {
+                        await errorMsg.delete();
+                    } catch (error) {
+                        console.warn('Could not delete error notification:', error);
+                    }
+                }, 3000);
+                return;
             }
 
-            default:
-                return message.reply('❌ Sub-command tidak valid! Gunakan: `embed`, `text`, `remove`, atau `status`');
+            if (image && !StickyManager.validateImageUrl(image)) {
+                const errorMsg = await message.reply('❌ URL gambar tidak valid!');
+                setTimeout(async () => {
+                    try {
+                        await errorMsg.delete();
+                    } catch (error) {
+                        console.warn('Could not delete error notification:', error);
+                    }
+                }, 3000);
+                return;
+            }
+
+            try {
+                if (stickyData[channelId]) {
+                    try {
+                        const oldMsg = await message.channel.messages.fetch(stickyData[channelId].messageId);
+                        await oldMsg.delete();
+                    } catch { }
+                }
+
+                const msgOptions = { content: text };
+                if (image) msgOptions.files = [{ attachment: image, name: 'sticky-image.png' }];
+
+                const sent = await message.channel.send(msgOptions);
+
+                stickyData[channelId] = {
+                    messageId: sent.id,
+                    type: 'plain',
+                    content: text,
+                    image: image || null,
+                    authorId: message.author.id,
+                    createdAt: Date.now(),
+                    lastUpdated: Date.now(),
+                    protected: false,
+                    errorCount: 0,
+                    disabled: false
+                };
+                saveStickyData(stickyData);
+
+                // Delete user's command message
+                try {
+                    await message.delete();
+                } catch (error) {
+                    console.warn('Could not delete command message:', error);
+                }
+
+                // Send notification and delete after 3 seconds
+                const notification = await message.channel.send(`✅ Sticky plain berhasil diset!\n🔗 [Jump to message](${sent.url})`);
+                setTimeout(async () => {
+                    try {
+                        await notification.delete();
+                    } catch (error) {
+                        console.warn('Could not delete notification:', error);
+                    }
+                }, 3000);
+            } catch (err) {
+                console.error('Sticky plain error:', err);
+                const errorMsg = await message.reply('❌ Gagal membuat sticky plain!');
+                setTimeout(async () => {
+                    try {
+                        await errorMsg.delete();
+                    } catch (error) {
+                        console.warn('Could not delete error notification:', error);
+                    }
+                }, 3000);
+            }
+        } else if (sub === 'remove') {
+            if (!stickyData[channelId]) {
+                const errorMsg = await message.reply('❌ Tidak ada sticky message di channel ini!');
+                setTimeout(async () => {
+                    try {
+                        await errorMsg.delete();
+                    } catch (error) {
+                        console.warn('Could not delete error notification:', error);
+                    }
+                }, 3000);
+                return;
+            }
+            try {
+                const stickyMessageId = stickyData[channelId].messageId;
+                try {
+                    const stickyMessage = await message.channel.messages.fetch(stickyMessageId);
+                    await stickyMessage.delete();
+                } catch { }
+                delete stickyData[channelId];
+                saveStickyData(stickyData);
+                const successMsg = await message.reply('✅ Sticky message berhasil dihapus!');
+                setTimeout(async () => {
+                    try {
+                        await successMsg.delete();
+                    } catch (error) {
+                        console.warn('Could not delete success notification:', error);
+                    }
+                }, 3000);
+            } catch (err) {
+                console.error('Sticky remove error:', err);
+                const errorMsg = await message.reply('❌ Gagal menghapus sticky message!');
+                setTimeout(async () => {
+                    try {
+                        await errorMsg.delete();
+                    } catch (error) {
+                        console.warn('Could not delete error notification:', error);
+                    }
+                }, 3000);
+            }
+        } else if (sub === 'status') {
+            if (!stickyData[channelId]) {
+                const errorMsg = await message.reply('❌ Tidak ada sticky message di channel ini!');
+                setTimeout(async () => {
+                    try {
+                        await errorMsg.delete();
+                    } catch (error) {
+                        console.warn('Could not delete error notification:', error);
+                    }
+                }, 3000);
+                return;
+            }
+            const sticky = stickyData[channelId];
+            const createdAt = new Date(sticky.createdAt);
+            const embed = new EmbedBuilder()
+                .setTitle('📌 Sticky Message Status')
+                .addFields(
+                    { name: 'Type', value: sticky.type || 'embed', inline: true },
+                    { name: 'Created', value: `<t:${Math.floor(createdAt.getTime() / 1000)}:R>`, inline: true },
+                    { name: 'Protected', value: sticky.protected ? '🔒 Yes' : '🔓 No', inline: true },
+                    { name: 'Status', value: sticky.disabled ? '❌ Disabled' : '✅ Active', inline: true }
+                )
+                .setColor(config.embedColor)
+                .setTimestamp();
+
+            if (sticky.type === 'embed') {
+                embed.addFields(
+                    { name: 'Title', value: sticky.title || 'No title', inline: true },
+                    { name: 'Color', value: sticky.color || config.embedColor, inline: true }
+                );
+            }
+            if (sticky.content) {
+                const preview = sticky.content.length > 500
+                    ? sticky.content.substring(0, 500) + '...'
+                    : sticky.content;
+                embed.addFields({ name: 'Content Preview', value: `\`\`\`${preview}\`\`\`` });
+            }
+            if (sticky.image) {
+                embed.addFields({ name: 'Image URL', value: sticky.image });
+                embed.setThumbnail(sticky.image);
+            }
+            if (sticky.errorCount > 0) {
+                embed.addFields({
+                    name: '⚠️ Error Count',
+                    value: `${sticky.errorCount} errors`,
+                    inline: true
+                });
+            }
+            message.reply({ embeds: [embed] });
+        } else if (sub === 'protect') {
+            // !sticky protect [on|off]
+            if (!stickyData[channelId]) {
+                const errorMsg = await message.reply('❌ Tidak ada sticky message di channel ini!');
+                setTimeout(async () => {
+                    try {
+                        await errorMsg.delete();
+                    } catch (error) {
+                        console.warn('Could not delete error notification:', error);
+                    }
+                }, 3000);
+                return;
+            }
+            const enabled = (args[1] || '').toLowerCase() === 'on';
+            stickyData[channelId].protected = enabled;
+            saveStickyData(stickyData);
+            const successMsg = await message.reply(`✅ Protection sticky message berhasil ${enabled ? 'diaktifkan' : 'dinonaktifkan'}!`);
+            setTimeout(async () => {
+                try {
+                    await successMsg.delete();
+                } catch (error) {
+                    console.warn('Could not delete success notification:', error);
+                }
+            }, 3000);
+        } else {
+            // Help
+            message.reply(
+                '**Sticky Command Usage:**\n' +
+                '`!sticky embed <judul>|<deskripsi>|[image_url]|[color]`\n' +
+                '`!sticky plain <pesan> [image_url]`\n' +
+                '`!sticky remove`\n' +
+                '`!sticky status`\n' +
+                '`!sticky protect [on|off]`\n' +
+                '\nContoh:\n' +
+                '`!sticky embed Welcome|Selamat datang di channel ini!|https://imgur.com/xxx.png|#ff0000`\n' +
+                '`!sticky plain Pesan sticky biasa`\n'
+            );
         }
     }
 };

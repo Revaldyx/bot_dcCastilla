@@ -13,7 +13,20 @@
   "stickyDelay": 2000,
   "maxStickyLength": 2000,
   "stickyCleanupInterval": 300000,
-  "maxPlainStickyLength": 2000,
-  "protectStickyMessages": true,
-  "stickyProtectionWarning": "⚠️ Pesan sticky tidak bisa dihapus! Gunakan `!sticky remove` untuk menghapus sticky message."
+  "stickyImageMaxSize": 8388608,
+  "allowedImageDomains": [
+    "discord.com",
+    "discordapp.com",
+    "cdn.discordapp.com",
+    "imgur.com",
+    "i.imgur.com",
+    "github.com",
+    "raw.githubusercontent.com"
+  ],
+  "commandCooldown": 3,
+  "maxEmbedTotalLength": 6000,
+  "enableErrorReporting": true,
+  "autoCleanupInterval": 3600000,
+  "rateLimitPerUser": 10,
+  "rateLimitWindow": 60000
 }
