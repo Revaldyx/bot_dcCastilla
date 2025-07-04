@@ -293,7 +293,8 @@ module.exports = {
                     { name: 'Type', value: sticky.type || 'embed', inline: true },
                     { name: 'Created', value: `<t:${Math.floor(createdAt.getTime() / 1000)}:R>`, inline: true },
                     { name: 'Protected', value: sticky.protected ? '🔒 Yes' : '🔓 No', inline: true },
-                    { name: 'Status', value: sticky.disabled ? '❌ Disabled' : '✅ Active', inline: true }
+                    { name: 'Status', value: sticky.disabled ? '❌ Disabled' : '✅ Active', inline: true },
+                    { name: 'Delay', value: `${(config.stickyDelay || 10000) / 1000} seconds`, inline: true }
                 )
                 .setColor(config.embedColor)
                 .setTimestamp();
@@ -357,7 +358,8 @@ module.exports = {
                 '`!sticky protect [on|off]`\n' +
                 '\nContoh:\n' +
                 '`!sticky embed Welcome|Selamat datang di channel ini!|https://imgur.com/xxx.png|#ff0000`\n' +
-                '`!sticky plain Pesan sticky biasa`\n'
+                '`!sticky plain Pesan sticky biasa`\n' +
+                `\n⏰ Sticky message akan muncul kembali setelah ${(config.stickyDelay || 10000) / 1000} detik user lain mengirim pesan.`
             );
         }
     }

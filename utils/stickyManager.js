@@ -7,6 +7,9 @@ const { fetch, isAvailable: fetchAvailable } = require('./fetchPolyfill');
 const stickyDataPath = path.join(__dirname, '..', 'data', 'sticky.json');
 
 class StickyManager {
+    // Store pending timeouts for each channel
+    static pendingTimeouts = new Map();
+
     static loadStickyData() {
         try {
             if (fs.existsSync(stickyDataPath)) {
@@ -45,15 +48,44 @@ class StickyManager {
 
         const sticky = stickyData[channelId];
 
+        // Check if sticky is disabled
+        if (sticky.disabled) {
+            return;
+        }
+
+        // Clear any existing timeout for this channel
+        if (this.pendingTimeouts.has(channelId)) {
+            clearTimeout(this.pendingTimeouts.get(channelId));
+        }
+
+        // Set a new timeout for 10 seconds
+        const timeoutId = setTimeout(async () => {
+            try {
+                await this.recreateStickyMessage(message.channel, sticky, channelId);
+            } catch (error) {
+                console.error('Error in delayed sticky recreation:', error);
+            } finally {
+                // Clean up the timeout reference
+                this.pendingTimeouts.delete(channelId);
+            }
+        }, config.stickyDelay || 10000);
+
+        // Store the timeout ID
+        this.pendingTimeouts.set(channelId, timeoutId);
+    }
+
+    static async recreateStickyMessage(channel, sticky, channelId) {
+        const stickyData = this.loadStickyData();
+
         // Check if message is protected (optional feature)
-        if (sticky.protected && Date.now() - sticky.lastUpdated < (config.stickyDelay || 2000)) {
+        if (sticky.protected && Date.now() - sticky.lastUpdated < (config.stickyDelay || 10000)) {
             return;
         }
 
         try {
             // Try to delete the old sticky message
             try {
-                const oldStickyMessage = await message.channel.messages.fetch(sticky.messageId);
+                const oldStickyMessage = await channel.messages.fetch(sticky.messageId);
                 await oldStickyMessage.delete();
             } catch (fetchError) {
                 console.log('Old sticky message not found, creating new one');
@@ -84,7 +116,7 @@ class StickyManager {
                     stickyEmbed.setThumbnail(sticky.thumbnail);
                 }
 
-                newStickyMessage = await message.channel.send({ embeds: [stickyEmbed] });
+                newStickyMessage = await channel.send({ embeds: [stickyEmbed] });
 
             } else if (sticky.type === 'plain') {
                 const messageOptions = {
@@ -95,7 +127,7 @@ class StickyManager {
                     messageOptions.files = [{ attachment: sticky.image, name: 'sticky-image.png' }];
                 }
 
-                newStickyMessage = await message.channel.send(messageOptions);
+                newStickyMessage = await channel.send(messageOptions);
             }
 
             // Update the message ID and timestamp in data
@@ -104,8 +136,14 @@ class StickyManager {
             stickyData[channelId] = sticky;
             this.saveStickyData(stickyData);
 
+            // Reset error count on successful recreation
+            if (sticky.errorCount > 0) {
+                sticky.errorCount = 0;
+                this.saveStickyData(stickyData);
+            }
+
         } catch (error) {
-            console.error('Error handling sticky message:', error);
+            console.error('Error recreating sticky message:', error);
 
             // If sticky fails too many times, disable it temporarily
             if (!sticky.errorCount) sticky.errorCount = 0;
@@ -116,11 +154,18 @@ class StickyManager {
                 sticky.disabled = true;
             }
 
+            stickyData[channelId] = sticky;
             this.saveStickyData(stickyData);
         }
     }
 
     static cleanupSticky(channelId) {
+        // Clear any pending timeout for this channel
+        if (this.pendingTimeouts.has(channelId)) {
+            clearTimeout(this.pendingTimeouts.get(channelId));
+            this.pendingTimeouts.delete(channelId);
+        }
+
         const stickyData = this.loadStickyData();
         if (stickyData[channelId]) {
             delete stickyData[channelId];

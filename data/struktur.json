@@ -16,15 +16,7 @@
     },
     "godmother": {
       "name": "💎 **La Marraine (Godmother)**",
-      "members": [
-        {
-          "id": "god_michiella_castilla",
-          "name": "Michiella Castilla",
-          "userId": "913276778091536384",
-          "addedBy": "403174107904081933",
-          "addedAt": 1750172165977
-        }
-      ],
+      "members": [],
       "maxMembers": 1,
       "description": "Ibu baptis keluarga Castilla"
     },
@@ -51,9 +43,17 @@
           "userId": "1299896223083532291",
           "addedBy": "403174107904081933",
           "addedAt": 1750171976606
+        },
+        {
+          "id": "god_michiella_castilla",
+          "name": "Michiella Castilla",
+          "userId": "913276778091536384",
+          "addedBy": "403174107904081933",
+          "addedAt": 1750172165977,
+          "movedAt": 1751260832379
         }
       ],
-      "maxMembers": 3,
+      "maxMembers": 5,
       "description": "Penasihat keluarga Castilla"
     },
     "captain": {
@@ -100,27 +100,6 @@
           "userId": "693760875353341952",
           "addedBy": "403174107904081933",
           "addedAt": 1750172755616
-        },
-        {
-          "id": "bro_boy_castilla",
-          "name": "Boy Castilla",
-          "userId": "1124630398505324555",
-          "addedBy": "403174107904081933",
-          "addedAt": 1750190606216
-        },
-        {
-          "id": "bro_keisyaa_rose",
-          "name": "Keisyaa Rose",
-          "userId": "870021516543262771",
-          "addedBy": "403174107904081933",
-          "addedAt": 1750190683104
-        },
-        {
-          "id": "bro_flora_cloveynera",
-          "name": "Flora Cloveynera",
-          "userId": "201983888912809984",
-          "addedBy": "403174107904081933",
-          "addedAt": 1750190916414
         }
       ],
       "maxMembers": 10,
@@ -128,7 +107,48 @@
     },
     "soldier": {
       "name": "🔫 **Les Soldats (Soldier)**",
-      "members": [],
+      "members": [
+        {
+          "id": "bro_keisyaa_rose",
+          "name": "Keisyaa Rose",
+          "userId": "870021516543262771",
+          "addedBy": "403174107904081933",
+          "addedAt": 1750190683104,
+          "movedAt": 1751256316608
+        },
+        {
+          "id": "bro_flora_cloveynera",
+          "name": "Flora Cloveynera",
+          "userId": "201983888912809984",
+          "addedBy": "403174107904081933",
+          "addedAt": 1750190916414,
+          "movedAt": 1751256343989
+        },
+        {
+          "id": "rec_gio_arsena",
+          "name": "Gio Arsana",
+          "userId": "734460917055619132",
+          "addedBy": "403174107904081933",
+          "addedAt": 1750173091394,
+          "movedAt": 1751256635694
+        },
+        {
+          "id": "rec_van_housen",
+          "name": "Van Housen",
+          "userId": "770850023343652876",
+          "addedBy": "403174107904081933",
+          "addedAt": 1750173490673,
+          "movedAt": 1751256668755
+        },
+        {
+          "id": "rec_vinz_castila",
+          "name": "Vinz Castila",
+          "userId": "1061457621044957225",
+          "addedBy": "403174107904081933",
+          "addedAt": 1750173273065,
+          "movedAt": 1751452440479
+        }
+      ],
       "maxMembers": 17,
       "description": "Tentara keluarga Castilla"
     },
@@ -136,32 +156,11 @@
       "name": "🤝 **Les Recrues (Relasi)**",
       "members": [
         {
-          "id": "rec_gio_arsena",
-          "name": "Gio Arsana",
-          "userId": "734460917055619132",
-          "addedBy": "403174107904081933",
-          "addedAt": 1750173091394
-        },
-        {
           "id": "rec_nurawan_castilla",
           "name": "Nurawan Castilla",
           "userId": "441594829177356289",
           "addedBy": "403174107904081933",
           "addedAt": 1750173243388
-        },
-        {
-          "id": "rec_vinz_castila",
-          "name": "Vinz Castila",
-          "userId": "1061457621044957225",
-          "addedBy": "403174107904081933",
-          "addedAt": 1750173273065
-        },
-        {
-          "id": "rec_van_housen",
-          "name": "Van Housen",
-          "userId": "770850023343652876",
-          "addedBy": "403174107904081933",
-          "addedAt": 1750173490673
         },
         {
           "id": "rec_yupi_arsana",
@@ -185,11 +184,40 @@
           "addedAt": 1750190445964
         },
         {
-          "id": "rec_whalter_white",
-          "name": "Walter White",
-          "userId": "804613378160066560",
+          "id": "bro_boy_castilla",
+          "name": "Boy Castilla",
+          "userId": "1124630398505324555",
           "addedBy": "403174107904081933",
-          "addedAt": 1750190505008
+          "addedAt": 1750190606216,
+          "movedAt": 1751256281501
+        },
+        {
+          "id": "rec_denz_castilla",
+          "name": "Denz Castilla",
+          "userId": "635151917072384050",
+          "addedBy": "403174107904081933",
+          "addedAt": 1751256549456
+        },
+        {
+          "id": "rec_asep_castilla",
+          "name": "Asep Castilla",
+          "userId": "707811317053915207",
+          "addedBy": "403174107904081933",
+          "addedAt": 1751256572695
+        },
+        {
+          "id": "rec_arto_abimana",
+          "name": "Arto Abimana",
+          "userId": "1027412166418124851",
+          "addedBy": "403174107904081933",
+          "addedAt": 1751399441972
+        },
+        {
+          "id": "rec_noirveil_castilla",
+          "name": "Noirveil Castilla",
+          "userId": "420173939382288384",
+          "addedBy": "403174107904081933",
+          "addedAt": 1751399497219
         }
       ],
       "maxMembers": 50,
@@ -197,8 +225,8 @@
     }
   },
   "metadata": {
-    "lastUpdated": 1750190916414,
+    "lastUpdated": 1751452440479,
     "version": "1.0.0",
-    "totalMembers": 21
+    "totalMembers": 24
   }
 }
