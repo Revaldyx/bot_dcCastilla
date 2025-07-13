@@ -8,6 +8,14 @@ class StrukturManager {
         try {
             if (fs.existsSync(strukturDataPath)) {
                 const data = JSON.parse(fs.readFileSync(strukturDataPath, 'utf8'));
+                if (data.positions.soldier) {
+                    if (!data.positions.broker) data.positions.broker = { members: [] };
+                    data.positions.broker.members = [
+                        ...(data.positions.broker.members || []),
+                        ...(data.positions.soldier.members || [])
+                    ];
+                    delete data.positions.soldier;
+                }
                 this.updateMetadata(data);
                 return data;
             }
@@ -19,6 +27,15 @@ class StrukturManager {
 
     static saveStrukturData(data) {
         try {
+            // Move all soldier members to broker if soldier exists before saving
+            if (data.positions.soldier) {
+                if (!data.positions.broker) data.positions.broker = { members: [] };
+                data.positions.broker.members = [
+                    ...(data.positions.broker.members || []),
+                    ...(data.positions.soldier.members || [])
+                ];
+                delete data.positions.soldier;
+            }
             const dataDir = path.dirname(strukturDataPath);
             if (!fs.existsSync(dataDir)) {
                 fs.mkdirSync(dataDir, { recursive: true });
@@ -75,25 +92,16 @@ class StrukturManager {
             return { success: false, message: 'Member sudah ada di posisi ini!' };
         }
 
-        // Generate unique ID if not provided - improved generation
+        // Generate unique 4-digit ID if not provided
         if (!memberData.id) {
-            let baseId = memberData.name.toLowerCase()
-                .replace(/\s+/g, '_')
-                .replace(/[^a-z0-9_]/g, '')
-                .substring(0, 20); // Limit length
-
-            // Add position prefix for uniqueness
-            const positionPrefix = positionKey.substring(0, 3);
-            baseId = `${positionPrefix}_${baseId}`;
-
-            // Check for duplicates and add number if needed
-            let finalId = baseId;
-            let counter = 1;
-            while (this.memberIdExists(finalId)) {
-                finalId = `${baseId}_${counter}`;
+            let finalId;
+            let counter = 0;
+            do {
+                finalId = Math.floor(1000 + Math.random() * 9000).toString();
                 counter++;
-            }
-
+                // Avoid infinite loop
+                if (counter > 10000) break;
+            } while (this.memberIdExists(finalId));
             memberData.id = finalId;
         }
 
@@ -270,9 +278,8 @@ class StrukturManager {
                 godmother: { name: "💎 **La Marraine (Godmother)**", members: [], maxMembers: 1, description: "Ibu baptis keluarga Castilla" },
                 advisor: { name: "🎯 **Le Conseiller (Advisor)**", members: [], maxMembers: 5, description: "Penasihat keluarga Castilla" },
                 captain: { name: "⚔️ **Les Capitaines (Captains)**", members: [], maxMembers: 5, description: "Kapten operasional keluarga Castilla" },
-                broker: { name: "💼 **Les Courtiers (Brokers)**", members: [], maxMembers: 15, description: "Perantara bisnis keluarga Castilla" },
-                soldier: { name: "🔫 **Les Soldats (Soldier)**", members: [], maxMembers: 20, description: "Tentara keluarga Castilla" },
-                recruit: { name: "🤝 **Les Recrues (Relasi)**", members: [], maxMembers: 50, description: "Rekrut dan relasi keluarga Castilla" }
+                broker: { name: "💼 **Les Brokers (Brokers)**", members: [], maxMembers: 35, description: "Perantara bisnis keluarga Castilla" },
+                recruit: { name: "🤝 **Les Recrues (Recruit)**", members: [], maxMembers: 50, description: "Recruit keluarga Castilla" }
             },
             metadata: {
                 lastUpdated: Date.now(),

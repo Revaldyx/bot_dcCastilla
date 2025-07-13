@@ -4,19 +4,19 @@ Bot Discord khusus untuk server Castilla dengan sistem manajemen struktur organi
 
 ## 🌟 Fitur Utama
 
-- **Struktur Organisasi**: Sistem manajemen hierarki lengkap untuk organisasi Castilla
+- **Struktur Organisasi**: Sistem manajemen hierarki lengkap untuk organisasi Castilla (ID member 4 digit angka acak)
 - **Sticky Messages**: Pesan yang selalu muncul di atas channel dengan dukungan embed dan gambar
 - **Slash Commands**: Command modern dengan autocomplete dan parameter validation
 - **Story & Rules**: Sistem penyampaian latar belakang dan aturan organisasi
 - **Message Management**: Sistem penghapusan pesan dengan perlindungan sticky
-- **Permission System**: Validasi permission otomatis dengan role-based access
+- **Permission System**: Validasi permission otomatis dengan role-based access dan user owner override
 - **Auto Features**: Validasi startup, protection system, dan error recovery
 
 ## 📋 Slash Commands
 
 | Command | Deskripsi | Permission |
 |---------|-----------|------------|
-| `/ms add` | Tambah member ke posisi organisasi | Commander+ |
+| `/ms add` | Tambah member ke posisi organisasi (ID otomatis 4 angka) | Commander+ |
 | `/ms remove` | Hapus member dari posisi | Commander+ |
 | `/ms update` | Update data member | Commander+ |
 | `/ms move` | Pindah member antar posisi | Commander+ |
@@ -29,6 +29,11 @@ Bot Discord khusus untuk server Castilla dengan sistem manajemen struktur organi
 | `/purge` | Hapus sejumlah pesan (1-100) | Manage Messages |
 | `/help` | Daftar command yang tersedia | Anyone |
 | `/checkperms` | Cek permission bot di channel | Anyone |
+
+**Catatan perubahan:**
+- Semua notifikasi sukses/gagal pada `/ms add`, `/ms remove`, `/ms update`, `/ms move` sekarang hanya berupa pesan status singkat (tanpa embed detail/member).
+- Dev selalu bisa menjalankan semua slash command tanpa batasan permission.
+- ID member pada struktur organisasi sekarang selalu 4 angka acak (misal: "4821", "1937", dst).
 
 ## 🔧 Traditional Commands
 
@@ -60,25 +65,25 @@ Bot Discord khusus untuk server Castilla dengan sistem manajemen struktur organi
    - Kapten operasional keluarga Castilla
    - Penanggung jawab relasi
 
-5. **💼 Les Courtiers (Brokers)** - 10 slot
+5. **💼 Les Brokers (Brokers)** - 10 slot
    - Perantara bisnis keluarga Castilla
    - Informan dan pengaman
 
-6. **🔫 Les Soldats (Soldier)** - 17 slot
-   - Tentara keluarga Castilla
-   - Eksekutor lapangan
-
-7. **🤝 Les Recrues (Relasi)** - 50 slot
+6. **🤝 Les Recrues (Relasi)** - 50 slot
    - Rekrut dan relasi keluarga Castilla
    - Calon anggota
 
+**Catatan:**  
+- Label "Brokers" sudah digunakan di seluruh tampilan dan struktur.
+- ID member pada setiap posisi sekarang 4 angka acak.
+
 ### Fitur Manajemen Struktur
 
-- **Auto ID Generation**: ID unik otomatis untuk setiap member
-- **Role Integration**: Integrasi dengan Discord roles
+- **Auto ID Generation**: ID unik otomatis 4 angka untuk setiap member
+- **Role Integration**: Integrasi dengan Discord roles (otomatis tambah/hapus role saat add/move/remove)
 - **Search System**: Pencarian member dengan nama atau ID
 - **Statistics**: Statistik real-time kapasitas dan pengisian
-- **Move System**: Pemindahan member antar posisi
+- **Move System**: Pemindahan member antar posisi (role Discord juga otomatis diubah)
 - **Data Persistence**: Penyimpanan data permanen dengan backup
 
 ## 🛠️ Instalasi
@@ -230,13 +235,14 @@ Steam Hex: [Steam Hex]
 | Use External Emojis | Emoji eksternal | Enhanced messages |
 | Add Reactions | Tambah reaksi | Interactive features |
 
-### Role-Based Access
+### Role-Based Access & Owner Override
 
 - **Boss/Godmother**: Full access ke semua commands
 - **Advisor/Captain**: Access ke management commands
 - **Broker/Soldier**: Limited access
 - **Recruit**: View-only commands
 - **Administrator**: Override semua restrictions
+- **Dev**: Selalu bisa akses semua slash command tanpa batasan permission
 
 ## 🚀 Advanced Features
 
@@ -269,37 +275,23 @@ Steam Hex: [Steam Hex]
 ### Struktur Data
 
 ```json
-// struktur.json - Hierarki organisasi
+// struktur.json - Hierarki organisasi (ID member 4 angka)
 {
   "positions": {
     "boss": {
       "name": "👑 Le Patron (Boss)",
-      "members": [...],
-      "maxMembers": 1,
-      "description": "..."
+      "members": [
+        {
+          "id": "4821",
+          "name": "Mattheo Castilla",
+          // ...existing code...
+        }
+      ],
+      // ...existing code...
     }
+    // ...existing code...
   },
-  "metadata": {
-    "lastUpdated": timestamp,
-    "version": "1.0.0",
-    "totalMembers": number
-  }
-}
-
-// sticky.json - Sticky messages per channel
-{
-  "channelId": {
-    "messageId": "...",
-    "type": "embed|plain",
-    "content": "...",
-    "image": "url|null",
-    "authorId": "...",
-    "createdAt": timestamp,
-    "lastUpdated": timestamp,
-    "protected": boolean,
-    "errorCount": number,
-    "disabled": boolean
-  }
+  // ...existing code...
 }
 ```
 
@@ -471,7 +463,14 @@ npm run deploy
 
 ## 📝 Changelog
 
-### v3.0.0 (Latest)
+### v3.1.0 (Terbaru)
+- **CHANGE**: Semua ID member di struktur organisasi sekarang 4 angka acak (otomatis dan manual)
+- **CHANGE**: Semua notifikasi sukses/gagal pada `/ms` hanya berupa pesan status singkat (tanpa embed/member detail)
+- **CHANGE**: Dev selalu bisa akses semua slash command tanpa batasan permission
+- **IMPROVED**: Otomatis update role Discord saat member dipindah/ditambah/dihapus
+- **FIXED**: Perbaikan bug role tidak terhapus/terupdate saat move/remove
+
+### v3.0.0
 - **NEW**: Complete structure management system with slash commands
 - **NEW**: Advanced autocomplete for member selection
 - **NEW**: Role-based permission system

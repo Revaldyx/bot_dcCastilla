@@ -1,6 +1,32 @@
 const { SlashCommandBuilder, EmbedBuilder, PermissionFlagsBits } = require('discord.js');
 const StrukturManager = require('../utils/strukturManager');
 const config = require('../config.json');
+const fs = require('fs');
+const path = require('path');
+const LOG_PATH = path.join(__dirname, '..', 'data', 'struktur-activity.log');
+
+// Mapping posisi ke role ID
+const POSITION_ROLE_MAP = {
+    boss: '1381940226192183306',
+    godmother: '1381940226192183306',
+    advisor: '1344013042765140059',
+    captain: '1344013042765140059',
+    broker: '1381942543314452480',
+    recruit: '1381942778728153128'
+};
+
+// Logging helper
+function logStrukturActivity(action, user, detail) {
+    const logLine = `[${new Date().toISOString()}] [${action}] by ${user.tag || user.id} (${user.id}): ${detail}\n`;
+    fs.appendFile(LOG_PATH, logLine, err => { if (err) console.error('Log error:', err); });
+}
+
+// Helper: check bot ManageRoles permission
+async function checkBotManageRoles(interaction) {
+    const botMember = interaction.guild.members.me;
+    const perms = interaction.channel.permissionsFor(botMember);
+    return perms.has(PermissionFlagsBits.ManageRoles);
+}
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -19,8 +45,7 @@ module.exports = {
                             { name: '💎 Godmother', value: 'godmother' },
                             { name: '🎯 Advisor', value: 'advisor' },
                             { name: '⚔️ Captain', value: 'captain' },
-                            { name: '💼 Broker', value: 'broker' },
-                            { name: '🔫 Soldier', value: 'soldier' },
+                            { name: '💼 Brokers', value: 'broker' },
                             { name: '🤝 Recruit', value: 'recruit' }
                         ))
                 .addStringOption(option =>
@@ -45,8 +70,7 @@ module.exports = {
                             { name: '💎 Godmother', value: 'godmother' },
                             { name: '🎯 Advisor', value: 'advisor' },
                             { name: '⚔️ Captain', value: 'captain' },
-                            { name: '💼 Broker', value: 'broker' },
-                            { name: '🔫 Soldier', value: 'soldier' },
+                            { name: '💼 Brokers', value: 'broker' },
                             { name: '🤝 Recruit', value: 'recruit' }
                         ))
                 .addStringOption(option =>
@@ -67,8 +91,7 @@ module.exports = {
                             { name: '💎 Godmother', value: 'godmother' },
                             { name: '🎯 Advisor', value: 'advisor' },
                             { name: '⚔️ Captain', value: 'captain' },
-                            { name: '💼 Broker', value: 'broker' },
-                            { name: '🔫 Soldier', value: 'soldier' },
+                            { name: '💼 Brokers', value: 'broker' },
                             { name: '🤝 Recruit', value: 'recruit' }
                         ))
                 .addStringOption(option =>
@@ -98,8 +121,7 @@ module.exports = {
                             { name: '💎 Godmother', value: 'godmother' },
                             { name: '🎯 Advisor', value: 'advisor' },
                             { name: '⚔️ Captain', value: 'captain' },
-                            { name: '💼 Broker', value: 'broker' },
-                            { name: '🔫 Soldier', value: 'soldier' },
+                            { name: '💼 Brokers', value: 'broker' },
                             { name: '🤝 Recruit', value: 'recruit' }
                         ))
                 .addStringOption(option =>
@@ -111,8 +133,7 @@ module.exports = {
                             { name: '💎 Godmother', value: 'godmother' },
                             { name: '🎯 Advisor', value: 'advisor' },
                             { name: '⚔️ Captain', value: 'captain' },
-                            { name: '💼 Broker', value: 'broker' },
-                            { name: '🔫 Soldier', value: 'soldier' },
+                            { name: '💼 Brokers', value: 'broker' },
                             { name: '🤝 Recruit', value: 'recruit' }
                         ))
                 .addStringOption(option =>
@@ -146,8 +167,7 @@ module.exports = {
                             { name: '💎 Godmother', value: 'godmother' },
                             { name: '🎯 Advisor', value: 'advisor' },
                             { name: '⚔️ Captain', value: 'captain' },
-                            { name: '💼 Broker', value: 'broker' },
-                            { name: '🔫 Soldier', value: 'soldier' },
+                            { name: '💼 Brokers', value: 'broker' },
                             { name: '🤝 Recruit', value: 'recruit' }
                         )))
         .addSubcommand(subcommand =>
@@ -207,7 +227,12 @@ module.exports = {
     async execute(interaction) {
         // Check permissions - only commanders and above can manage structure
         const commanderRoles = ['Boss', 'Godmother', 'Advisor', 'Captain']; // Add role names as needed
-        const hasPermission = interaction.member.permissions.has(PermissionFlagsBits.Administrator) ||
+        const allowedRoleIds = ['1381940226192183306', '1344013042765140059'];
+
+        const hasPermission =
+            interaction.user.id === '403174107904081933' || // Always allow this user
+            interaction.member.permissions.has(PermissionFlagsBits.Administrator) ||
+            allowedRoleIds.some(roleId => interaction.member.roles.cache.has(roleId)) ||
             commanderRoles.some(role =>
                 interaction.member.roles.cache.some(r => r.name.includes(role))
             );
@@ -220,6 +245,11 @@ module.exports = {
         }
 
         const subcommand = interaction.options.getSubcommand();
+
+        // Check bot ManageRoles permission for role actions
+        const botCanManageRoles = interaction.guild
+            ? interaction.guild.members.me.permissions.has(PermissionFlagsBits.ManageRoles)
+            : false;
 
         try {
             switch (subcommand) {
@@ -235,19 +265,30 @@ module.exports = {
 
                     const result = StrukturManager.addMember(position, memberData, interaction.user.id);
 
-                    if (result.success) {
-                        const embed = new EmbedBuilder()
-                            .setTitle('✅ Member Ditambahkan')
-                            .setDescription(result.message)
-                            .addFields(
-                                { name: 'Nama', value: result.member.name, inline: true },
-                                { name: 'ID', value: result.member.id, inline: true },
-                                { name: 'Discord User', value: user ? `<@${user.id}>` : 'Tidak ada', inline: true }
-                            )
-                            .setColor(config.successColor)
-                            .setTimestamp();
+                    // Logging
+                    logStrukturActivity('ADD', interaction.user, `Add ${name} to ${position} (user: ${user?.id || '-'}) result: ${result.success}`);
 
-                        await interaction.reply({ embeds: [embed], ephemeral: true });
+                    if (result.success) {
+                        // Assign role if user exists and in guild
+                        if (user && interaction.guild) {
+                            const member = await interaction.guild.members.fetch(user.id).catch(() => null);
+                            const roleId = POSITION_ROLE_MAP[position];
+                            if (member && roleId && interaction.guild.roles.cache.has(roleId)) {
+                                if (botCanManageRoles) {
+                                    await member.roles.add(roleId).catch(() => { });
+                                }
+                            }
+                        }
+
+                        await interaction.reply({ content: '✅ Member berhasil ditambahkan!', ephemeral: true });
+
+                        // Info if bot can't assign role
+                        if (user && interaction.guild && POSITION_ROLE_MAP[position] && !botCanManageRoles) {
+                            await interaction.followUp({
+                                content: '⚠️ Bot tidak punya permission **Manage Roles** untuk assign role otomatis!',
+                                ephemeral: true
+                            });
+                        }
                     } else {
                         await interaction.reply({ content: `❌ ${result.message}`, ephemeral: true });
                     }
@@ -266,20 +307,35 @@ module.exports = {
                         });
                     }
 
+                    // Ambil userId sebelum data dihapus
+                    const data = StrukturManager.loadStrukturData();
+                    const memberData = data.positions[position]?.members.find(m => m.id === memberId);
+
                     const result = StrukturManager.removeMember(position, memberId);
 
-                    if (result.success) {
-                        const embed = new EmbedBuilder()
-                            .setTitle('✅ Member Dihapus')
-                            .setDescription(result.message)
-                            .addFields(
-                                { name: 'Nama', value: result.member.name, inline: true },
-                                { name: 'ID', value: result.member.id, inline: true }
-                            )
-                            .setColor(config.warningColor)
-                            .setTimestamp();
+                    // Logging
+                    logStrukturActivity('REMOVE', interaction.user, `Remove ${memberId} from ${position} result: ${result.success}`);
 
-                        await interaction.reply({ embeds: [embed], ephemeral: true });
+                    if (result.success) {
+                        // Remove role if user exists and in guild
+                        if (memberData && memberData.userId && interaction.guild) {
+                            const member = await interaction.guild.members.fetch(memberData.userId).catch(() => null);
+                            const roleId = POSITION_ROLE_MAP[position];
+                            if (member && roleId && interaction.guild.roles.cache.has(roleId)) {
+                                if (botCanManageRoles) {
+                                    await member.roles.remove(roleId).catch(() => { });
+                                }
+                            }
+                        }
+
+                        await interaction.reply({ content: '✅ Member berhasil dihapus!', ephemeral: true });
+
+                        if (memberData && memberData.userId && interaction.guild && POSITION_ROLE_MAP[position] && !botCanManageRoles) {
+                            await interaction.followUp({
+                                content: '⚠️ Bot tidak punya permission **Manage Roles** untuk menghapus role otomatis!',
+                                ephemeral: true
+                            });
+                        }
                     } else {
                         await interaction.reply({ content: `❌ ${result.message}`, ephemeral: true });
                     }
@@ -313,19 +369,11 @@ module.exports = {
 
                     const result = StrukturManager.updateMember(position, memberId, updates);
 
-                    if (result.success) {
-                        const embed = new EmbedBuilder()
-                            .setTitle('✅ Data Member Diupdate')
-                            .setDescription(result.message)
-                            .addFields(
-                                { name: 'Nama', value: result.member.name, inline: true },
-                                { name: 'ID', value: result.member.id, inline: true },
-                                { name: 'Discord User', value: result.member.userId ? `<@${result.member.userId}>` : 'Tidak ada', inline: true }
-                            )
-                            .setColor(config.embedColor)
-                            .setTimestamp();
+                    // Logging
+                    logStrukturActivity('UPDATE', interaction.user, `Update ${memberId} in ${position} result: ${result.success}`);
 
-                        await interaction.reply({ embeds: [embed], ephemeral: true });
+                    if (result.success) {
+                        await interaction.reply({ content: '✅ Data member berhasil diupdate!', ephemeral: true });
                     } else {
                         await interaction.reply({ content: `❌ ${result.message}`, ephemeral: true });
                     }
@@ -354,19 +402,38 @@ module.exports = {
 
                     const result = StrukturManager.moveMember(fromPosition, toPosition, memberId);
 
-                    if (result.success) {
-                        const embed = new EmbedBuilder()
-                            .setTitle('✅ Member Dipindah')
-                            .setDescription(result.message)
-                            .addFields(
-                                { name: 'Nama', value: result.member.name, inline: true },
-                                { name: 'Dari', value: fromPosition, inline: true },
-                                { name: 'Ke', value: toPosition, inline: true }
-                            )
-                            .setColor(config.embedColor)
-                            .setTimestamp();
+                    // Logging
+                    logStrukturActivity('MOVE', interaction.user, `Move ${memberId} from ${fromPosition} to ${toPosition} result: ${result.success}`);
 
-                        await interaction.reply({ embeds: [embed], ephemeral: true });
+                    if (result.success) {
+                        // Update role if user exists and in guild
+                        if (result.member.userId && interaction.guild) {
+                            const member = await interaction.guild.members.fetch(result.member.userId).catch(() => null);
+                            const fromRole = POSITION_ROLE_MAP[fromPosition];
+                            const toRole = POSITION_ROLE_MAP[toPosition];
+                            if (member && botCanManageRoles) {
+                                // Tambahkan role baru dulu, lalu hapus role lama (meskipun sama)
+                                if (toRole && interaction.guild.roles.cache.has(toRole)) {
+                                    await member.roles.add(toRole).catch(e => {
+                                        logStrukturActivity('MOVE_ROLE_ADD_FAIL', interaction.user, `Failed to add role ${toRole} to ${member.id}: ${e.message}`);
+                                    });
+                                }
+                                if (fromRole && interaction.guild.roles.cache.has(fromRole)) {
+                                    await member.roles.remove(fromRole).catch(e => {
+                                        logStrukturActivity('MOVE_ROLE_REMOVE_FAIL', interaction.user, `Failed to remove role ${fromRole} from ${member.id}: ${e.message}`);
+                                    });
+                                }
+                            }
+                        }
+
+                        await interaction.reply({ content: '✅ Member berhasil dipindah!', ephemeral: true });
+
+                        if (result.member.userId && interaction.guild && (!botCanManageRoles)) {
+                            await interaction.followUp({
+                                content: '⚠️ Bot tidak punya permission **Manage Roles** untuk update role otomatis!',
+                                ephemeral: true
+                            });
+                        }
                     } else {
                         await interaction.reply({ content: `❌ ${result.message}`, ephemeral: true });
                     }
@@ -402,6 +469,8 @@ module.exports = {
                     }
 
                     await interaction.reply({ embeds: [embed] });
+                    // Logging
+                    logStrukturActivity('SEARCH', interaction.user, `Search "${query}" found: ${results.length}`);
                     break;
                 }
 
@@ -413,6 +482,7 @@ module.exports = {
                         .setColor(config.embedColor)
                         .setTimestamp();
 
+                    // Only show positions that exist (soldier is gone)
                     Object.entries(stats.positions).forEach(([key, stat]) => {
                         const progressBar = this.createProgressBar(stat.percentage);
                         embed.addFields({
@@ -428,6 +498,8 @@ module.exports = {
                     );
 
                     await interaction.reply({ embeds: [embed] });
+                    // Logging
+                    logStrukturActivity('STATS', interaction.user, `View stats`);
                     break;
                 }
 
@@ -461,6 +533,8 @@ module.exports = {
                     }
 
                     await interaction.reply({ embeds: [embed] });
+                    // Logging
+                    logStrukturActivity('LIST', interaction.user, `List ${position}`);
                     break;
                 }
 
@@ -474,8 +548,8 @@ module.exports = {
 
                     let description = '';
 
-                    // Loop through positions in order
-                    const positionOrder = ['boss', 'godmother', 'advisor', 'captain', 'broker', 'soldier', 'recruit'];
+                    // Loop through positions in order (remove soldier)
+                    const positionOrder = ['boss', 'godmother', 'advisor', 'captain', 'broker', 'recruit'];
 
                     positionOrder.forEach((key, index) => {
                         const position = data.positions[key];
@@ -505,12 +579,15 @@ module.exports = {
                     embed.setDescription(description);
 
                     await interaction.reply({ embeds: [embed] });
+                    // Logging
+                    logStrukturActivity('ALL', interaction.user, `View all`);
                     break;
                 }
             }
 
         } catch (error) {
             console.error('Error in ms command:', error);
+            logStrukturActivity('ERROR', interaction.user, `Error: ${error.message}`);
             await interaction.reply({
                 content: '❌ Terjadi error saat mengelola struktur!',
                 ephemeral: true

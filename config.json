@@ -10,7 +10,7 @@
   "maxRetries": 3,
   "retryDelay": 1000,
   "defaultThumbnail": "https://cdn.discordapp.com/attachments/912410701761499166/1382835006837227743/image13.png",
-  "stickyDelay": 10000,
+  "stickyDelay": 30000,
   "maxStickyLength": 2000,
   "stickyCleanupInterval": 300000,
   "stickyImageMaxSize": 8388608,

