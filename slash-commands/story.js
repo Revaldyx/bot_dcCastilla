@@ -7,13 +7,19 @@ module.exports = {
         .setDescription('Mengirim story latar belakang gang Castilla'),
 
     async execute(interaction) {
+        if (interaction.user.id !== '403174107904081933') {
+            return interaction.reply({
+                content: '❌ Command ini hanya bisa digunakan oleh developer.',
+                ephemeral: true
+            });
+        }
         await interaction.deferReply();
 
         const title = '📖 STORY CASTILLA';
         const longText = `
         **Nama Gang     :** Castilla
         **Jenis Gang    :** Business
-        **Pilihan Bisnis:** Drugs
+        **Pilihan Bisnis:** Gunsmith
 
         Latar Belakang Gang:
 
@@ -44,7 +50,7 @@ module.exports = {
                 {
                     color: '#8B4513',
                     timestamp: true,
-                    thumbnail: 'https://cdn.discordapp.com/attachments/912410701761499166/1382835006837227743/image13.png?ex=684c98f5&is=684b4775&hm=5229c6d1bfa9a524c7dd3285d34eb9338251adf2dd760c804db921f1d6e3142e&'
+                    thumbnail: 'https://media.discordapp.net/attachments/1393646458624020573/1394055518535946330/final.png?ex=68756adf&is=6874195f&hm=dddaac234dfb341c4c57cca84bd04a738b686ee189d45fd7d350aa0df2489e6c'
                 }
             );
 

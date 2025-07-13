@@ -53,6 +53,22 @@ module.exports = {
         const channelId = message.channel.id;
         const stickyData = loadStickyData();
 
+        const NOTIF_DELETE_MS = 5000;
+
+        // Helper untuk notifikasi embed
+        async function sendNotif(type, desc) {
+            const embed = EmbedUtils.createQuickEmbed(
+                type,
+                type === 'success' ? 'Berhasil' : 'Gagal',
+                desc,
+                { timestamp: false }
+            );
+            const notif = await message.channel.send({ embeds: [embed] });
+            setTimeout(async () => {
+                try { await notif.delete(); } catch { }
+            }, NOTIF_DELETE_MS);
+        }
+
         if (sub === 'embed') {
             // !sticky embed <title>|<desc>|[image]|[color]
             const input = args.slice(1).join(' ').split('|');
@@ -62,33 +78,18 @@ module.exports = {
             const color = input[3] || config.embedColor;
 
             if (!desc) {
-                const errorMsg = await message.reply('❌ Deskripsi sticky tidak boleh kosong!');
-                setTimeout(async () => {
-                    try {
-                        await errorMsg.delete();
-                    } catch (error) {
-                        console.warn('Could not delete error notification:', error);
-                    }
-                }, 3000);
+                await sendNotif('error', 'Deskripsi sticky tidak boleh kosong!');
                 return;
             }
 
             if (image && !StickyManager.validateImageUrl(image)) {
-                const errorMsg = await message.reply('❌ URL gambar tidak valid!');
-                setTimeout(async () => {
-                    try {
-                        await errorMsg.delete();
-                    } catch (error) {
-                        console.warn('Could not delete error notification:', error);
-                    }
-                }, 3000);
+                await sendNotif('error', 'URL gambar tidak valid!');
                 return;
             }
 
             // Send embed sticky
             try {
                 if (stickyData[channelId]) {
-                    // Remove old sticky
                     try {
                         const oldMsg = await message.channel.messages.fetch(stickyData[channelId].messageId);
                         await oldMsg.delete();
@@ -123,31 +124,15 @@ module.exports = {
                 saveStickyData(stickyData);
 
                 // Delete user's command message
-                try {
-                    await message.delete();
-                } catch (error) {
-                    console.warn('Could not delete command message:', error);
-                }
-
-                // Send notification and delete after 3 seconds
-                const notification = await message.channel.send(`✅ Sticky embed berhasil diset!\n🔗 [Jump to message](${sent.url})`);
                 setTimeout(async () => {
-                    try {
-                        await notification.delete();
-                    } catch (error) {
-                        console.warn('Could not delete notification:', error);
-                    }
-                }, 3000);
+                    try { await message.delete(); } catch { }
+                }, NOTIF_DELETE_MS);
+
+                // Notifikasi sukses
+                await sendNotif('success', `Sticky embed berhasil diset!\n[Klik untuk melihat pesan](${sent.url})`);
             } catch (err) {
                 console.error('Sticky embed error:', err);
-                const errorMsg = await message.reply('❌ Gagal membuat sticky embed!');
-                setTimeout(async () => {
-                    try {
-                        await errorMsg.delete();
-                    } catch (error) {
-                        console.warn('Could not delete error notification:', error);
-                    }
-                }, 3000);
+                await sendNotif('error', 'Gagal membuat sticky embed!');
             }
         } else if (sub === 'plain') {
             // !sticky plain <pesan> [image]
@@ -157,26 +142,12 @@ module.exports = {
             const text = image ? content.replace(image, '').trim() : content;
 
             if (!text) {
-                const errorMsg = await message.reply('❌ Pesan sticky tidak boleh kosong!');
-                setTimeout(async () => {
-                    try {
-                        await errorMsg.delete();
-                    } catch (error) {
-                        console.warn('Could not delete error notification:', error);
-                    }
-                }, 3000);
+                await sendNotif('error', 'Pesan sticky tidak boleh kosong!');
                 return;
             }
 
             if (image && !StickyManager.validateImageUrl(image)) {
-                const errorMsg = await message.reply('❌ URL gambar tidak valid!');
-                setTimeout(async () => {
-                    try {
-                        await errorMsg.delete();
-                    } catch (error) {
-                        console.warn('Could not delete error notification:', error);
-                    }
-                }, 3000);
+                await sendNotif('error', 'URL gambar tidak valid!');
                 return;
             }
 
@@ -207,43 +178,18 @@ module.exports = {
                 };
                 saveStickyData(stickyData);
 
-                // Delete user's command message
-                try {
-                    await message.delete();
-                } catch (error) {
-                    console.warn('Could not delete command message:', error);
-                }
-
-                // Send notification and delete after 3 seconds
-                const notification = await message.channel.send(`✅ Sticky plain berhasil diset!\n🔗 [Jump to message](${sent.url})`);
                 setTimeout(async () => {
-                    try {
-                        await notification.delete();
-                    } catch (error) {
-                        console.warn('Could not delete notification:', error);
-                    }
-                }, 3000);
+                    try { await message.delete(); } catch { }
+                }, NOTIF_DELETE_MS);
+
+                await sendNotif('success', `Sticky plain berhasil diset!\n[Klik untuk melihat pesan](${sent.url})`);
             } catch (err) {
                 console.error('Sticky plain error:', err);
-                const errorMsg = await message.reply('❌ Gagal membuat sticky plain!');
-                setTimeout(async () => {
-                    try {
-                        await errorMsg.delete();
-                    } catch (error) {
-                        console.warn('Could not delete error notification:', error);
-                    }
-                }, 3000);
+                await sendNotif('error', 'Gagal membuat sticky plain!');
             }
         } else if (sub === 'remove') {
             if (!stickyData[channelId]) {
-                const errorMsg = await message.reply('❌ Tidak ada sticky message di channel ini!');
-                setTimeout(async () => {
-                    try {
-                        await errorMsg.delete();
-                    } catch (error) {
-                        console.warn('Could not delete error notification:', error);
-                    }
-                }, 3000);
+                await sendNotif('error', 'Tidak ada sticky message di channel ini!');
                 return;
             }
             try {
@@ -254,35 +200,14 @@ module.exports = {
                 } catch { }
                 delete stickyData[channelId];
                 saveStickyData(stickyData);
-                const successMsg = await message.reply('✅ Sticky message berhasil dihapus!');
-                setTimeout(async () => {
-                    try {
-                        await successMsg.delete();
-                    } catch (error) {
-                        console.warn('Could not delete success notification:', error);
-                    }
-                }, 3000);
+                await sendNotif('success', 'Sticky message berhasil dihapus!');
             } catch (err) {
                 console.error('Sticky remove error:', err);
-                const errorMsg = await message.reply('❌ Gagal menghapus sticky message!');
-                setTimeout(async () => {
-                    try {
-                        await errorMsg.delete();
-                    } catch (error) {
-                        console.warn('Could not delete error notification:', error);
-                    }
-                }, 3000);
+                await sendNotif('error', 'Gagal menghapus sticky message!');
             }
         } else if (sub === 'status') {
             if (!stickyData[channelId]) {
-                const errorMsg = await message.reply('❌ Tidak ada sticky message di channel ini!');
-                setTimeout(async () => {
-                    try {
-                        await errorMsg.delete();
-                    } catch (error) {
-                        console.warn('Could not delete error notification:', error);
-                    }
-                }, 3000);
+                await sendNotif('error', 'Tidak ada sticky message di channel ini!');
                 return;
             }
             const sticky = stickyData[channelId];
@@ -322,45 +247,45 @@ module.exports = {
                     inline: true
                 });
             }
-            message.reply({ embeds: [embed] });
+            message.reply({ embeds: [embed] }).then(msg => {
+                setTimeout(async () => {
+                    try { await msg.delete(); } catch { }
+                }, NOTIF_DELETE_MS);
+            });
         } else if (sub === 'protect') {
             // !sticky protect [on|off]
             if (!stickyData[channelId]) {
-                const errorMsg = await message.reply('❌ Tidak ada sticky message di channel ini!');
-                setTimeout(async () => {
-                    try {
-                        await errorMsg.delete();
-                    } catch (error) {
-                        console.warn('Could not delete error notification:', error);
-                    }
-                }, 3000);
+                await sendNotif('error', 'Tidak ada sticky message di channel ini!');
                 return;
             }
             const enabled = (args[1] || '').toLowerCase() === 'on';
             stickyData[channelId].protected = enabled;
             saveStickyData(stickyData);
-            const successMsg = await message.reply(`✅ Protection sticky message berhasil ${enabled ? 'diaktifkan' : 'dinonaktifkan'}!`);
-            setTimeout(async () => {
-                try {
-                    await successMsg.delete();
-                } catch (error) {
-                    console.warn('Could not delete success notification:', error);
-                }
-            }, 3000);
+            await sendNotif('success', `Protection sticky message berhasil ${enabled ? 'diaktifkan' : 'dinonaktifkan'}!`);
         } else {
             // Help
-            message.reply(
-                '**Sticky Command Usage:**\n' +
-                '`!sticky embed <judul>|<deskripsi>|[image_url]|[color]`\n' +
-                '`!sticky plain <pesan> [image_url]`\n' +
-                '`!sticky remove`\n' +
-                '`!sticky status`\n' +
-                '`!sticky protect [on|off]`\n' +
-                '\nContoh:\n' +
-                '`!sticky embed Welcome|Selamat datang di channel ini!|https://imgur.com/xxx.png|#ff0000`\n' +
-                '`!sticky plain Pesan sticky biasa`\n' +
-                `\n⏰ Sticky message akan muncul kembali setelah ${(config.stickyDelay || 10000) / 1000} detik user lain mengirim pesan.`
+            const helpEmbed = EmbedUtils.createQuickEmbed(
+                'info',
+                'Sticky Command Usage',
+                [
+                    '`!sticky embed <judul>|<deskripsi>|[image_url]|[color]`',
+                    '`!sticky plain <pesan> [image_url]`',
+                    '`!sticky remove`',
+                    '`!sticky status`',
+                    '`!sticky protect [on|off]`',
+                    '',
+                    'Contoh:',
+                    '`!sticky embed Welcome|Selamat datang di channel ini!|https://imgur.com/xxx.png|#ff0000`',
+                    '`!sticky plain Pesan sticky biasa`',
+                    '',
+                    `⏰ Sticky message akan muncul kembali setelah ${(config.stickyDelay || 10000) / 1000} detik user lain mengirim pesan.`
+                ].join('\n')
             );
+            message.reply({ embeds: [helpEmbed] }).then(msg => {
+                setTimeout(async () => {
+                    try { await msg.delete(); } catch { }
+                }, NOTIF_DELETE_MS);
+            });
         }
     }
 };

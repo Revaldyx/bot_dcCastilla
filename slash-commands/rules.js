@@ -7,6 +7,12 @@ module.exports = {
         .setDescription('Menampilkan rules mafia Castilla'),
 
     async execute(interaction) {
+        if (interaction.user.id !== '403174107904081933') {
+            return interaction.reply({
+                content: '❌ Command ini hanya bisa digunakan oleh developer.',
+                ephemeral: true
+            });
+        }
         await interaction.deferReply();
 
         const title = ' ';

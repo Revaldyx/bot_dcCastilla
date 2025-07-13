@@ -39,13 +39,13 @@
     "disabled": false
   },
   "1384811410122342441": {
-    "messageId": "1393821792342245436",
+    "messageId": "1394041408410882170",
     "type": "plain",
     "content": "**Surat Izin**\n```\nNama :\nDurasi :\nReason :\nNote :\n```",
     "image": null,
     "authorId": "403174107904081933",
     "createdAt": 1750939854007,
-    "lastUpdated": 1752383356483,
+    "lastUpdated": 1752435715898,
     "protected": false,
     "errorCount": 0,
     "disabled": false
@@ -90,13 +90,25 @@
     "disabled": false
   },
   "1381949017780518995": {
-    "messageId": "1393881595722600530",
+    "messageId": "1394046126684110960",
     "type": "plain",
     "content": "# SETORAN CEK DISINI https://discord.com/channels/1220021811325042768/1387320220045152376",
     "image": null,
     "authorId": "403174107904081933",
     "createdAt": 1752178584184,
-    "lastUpdated": 1752397614212,
+    "lastUpdated": 1752436840785,
+    "protected": false,
+    "errorCount": 0,
+    "disabled": false
+  },
+  "1383906796133027850": {
+    "messageId": "1394095263840342159",
+    "type": "plain",
+    "content": "tes 1213",
+    "image": null,
+    "authorId": "403174107904081933",
+    "createdAt": 1752448555754,
+    "lastUpdated": 1752448555754,
     "protected": false,
     "errorCount": 0,
     "disabled": false

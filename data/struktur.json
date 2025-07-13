@@ -15,12 +15,6 @@
       "maxMembers": 1,
       "description": "Pemimpin tertinggi keluarga Castilla"
     },
-    "godmother": {
-      "name": "💎 **La Marraine (Godmother)**",
-      "members": [],
-      "maxMembers": 1,
-      "description": "Ibu baptis keluarga Castilla"
-    },
     "advisor": {
       "name": "🎯 **Le Conseiller (Advisor)**",
       "members": [
@@ -188,7 +182,7 @@
     }
   },
   "metadata": {
-    "lastUpdated": 1752411543783,
+    "lastUpdated": 1752447994968,
     "version": "1.0.0",
     "totalMembers": 19
   }
