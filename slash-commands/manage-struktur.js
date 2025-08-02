@@ -430,7 +430,7 @@ module.exports = {
                     if (results.length > 10) {
                         embed.setFooter({ text: `Menampilkan 10 dari ${results.length} hasil` });
                     }
-                    await interaction.reply({ embeds: [embed] });
+                    await interaction.reply({ embeds: [embed], ephemeral: true });
                     logStrukturActivity('SEARCH', interaction.user, `Search "${query}" found: ${results.length}`);
                     break;
                 }
@@ -486,15 +486,30 @@ module.exports = {
                 }
                 case 'all': {
                     const data = StrukturManager.loadStrukturData();
+
+                    // Cek dan hapus member double (userId sama di lebih dari satu posisi)
+                    const userIdMap = new Map();
+                    Object.entries(data.positions).forEach(([posKey, position]) => {
+                        position.members = position.members.filter(member => {
+                            if (!member.userId) return true;
+                            if (userIdMap.has(member.userId)) {
+                                // Sudah ada di posisi lain, hapus dari posisi ini
+                                return false;
+                            }
+                            userIdMap.set(member.userId, posKey);
+                            return true;
+                        });
+                    });
+                    // Simpan perubahan jika ada duplikat yang dihapus
+                    StrukturManager.saveStrukturData(data);
+
                     const embed = new EmbedBuilder()
                         .setTitle('📋 STRUKTUR ORGANISASI CASTILLA')
                         .setColor('#3498db')
                         .setTimestamp();
+
                     let description = '';
-                    const positionOrder = ['boss', 'advisor', 'captain', 'broker', 'recruit'];
-                    positionOrder.forEach((key) => {
-                        const position = data.positions[key];
-                        if (!position) return;
+                    Object.entries(data.positions).forEach(([key, position]) => {
                         description += `**${position.name.replace(/\*\*/g, '')}**\n`;
                         if (position.members.length === 0) {
                             description += `Kosong\n\n`;
@@ -506,10 +521,9 @@ module.exports = {
                             description += '\n';
                         }
                     });
-                    const totalMembers = Object.values(data.positions).reduce((total, pos) => total + pos.members.length, 0);
-                    description += `**Total Member: ${totalMembers}**\n\n`;
-                    description += `*Jika tidak ada namanya di atas silakan untuk lebih aktif lagi dan jika kamu <@&1381942778728153128> isi <#1383159361022459934>*`;
+                    description += `**Total Member: ${data.metadata?.totalMembers || 0}**\n\n`;
                     embed.setDescription(description);
+
                     await interaction.reply({ embeds: [embed] });
                     logStrukturActivity('ALL', interaction.user, `View all`);
                     break;
