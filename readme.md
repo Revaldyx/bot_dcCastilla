@@ -9,6 +9,11 @@ Bot Discord untuk server Castilla dengan sistem manajemen struktur organisasi, s
 - **Slash Commands**: Command modern dengan autocomplete & validasi parameter.
 - **Story & Rules**: Sistem story latar belakang & rules mafia.
 - **Role Integration**: Otomatis update role Discord saat add/move/remove member.
+- **Streaming & LIVE**: 
+  - Auto-assign role "NOW STREAMING" (default: "🔴 LIVE NOW") saat member live, hapus saat berhenti.
+  - Auto-create role jika belum ada (opsional).
+  - Deteksi native streaming (ActivityType.Streaming) dan link live di Custom Status (TikTok/Kick/FB/Trovo/Bilibili).
+  - Pengumuman LIVE otomatis ke channel yang ditentukan.
 - **Permission System**: Validasi permission otomatis, role-based & owner override.
 - **Auto Features**: Validasi startup, protection system, error recovery.
 
@@ -35,16 +40,25 @@ Bot Discord untuk server Castilla dengan sistem manajemen struktur organisasi, s
 - Semua notifikasi `/ms` hanya pesan status singkat (tanpa embed/member detail).
 - Dev (`403174107904081933`) selalu bisa menjalankan semua slash command tanpa batasan permission.
 - ID member pada struktur organisasi selalu 4 angka acak.
+- Fitur streaming/LIVE berjalan otomatis berdasarkan presence (tidak memerlukan slash command khusus).
 
-## 🔧 Traditional Commands
+## 🎥 Streaming & Live Announcement
 
-| Command | Deskripsi | Permission |
-|---------|-----------|------------|
-| `!sticky embed <judul>|<deskripsi>|[image_url]|[color]` | Sticky embed dengan gambar | Manage Messages |
-| `!sticky plain <pesan> [image_url]` | Sticky text dengan gambar | Manage Messages |
-| `!sticky remove` | Hapus sticky message | Manage Messages |
-| `!sticky status` | Status sticky di channel | Manage Messages |
-| `!sticky protect [on|off]` | Toggle protection sticky | Manage Messages |
+Fitur ini mengelola role "NOW STREAMING" dan mengirim pengumuman LIVE otomatis:
+- Deteksi streaming:
+  - Native: ActivityType.Streaming (Twitch/YouTube/Go Live) dengan URL.
+  - Custom Status: Link live yang tercantum di status kustom sesuai domain whitelist (mis. tiktok.com, kick.com, fb.gg, trovo.live, live.bilibili.com).
+- Role:
+  - Tambah role saat mulai live, hapus saat berhenti (opsional).
+  - Bisa auto-create role jika belum ada (dengan Manage Roles).
+- Pengumuman:
+  - Kirim pesan ke channel yang ditentukan saat mulai live.
+  - Opsi hapus pesan saat live berakhir.
+
+Catatan permission:
+- Bot membutuhkan Manage Roles untuk kelola role streaming.
+- Bot butuh Send Messages di channel pengumuman.
+- Aktifkan Gateway Intents: Guilds, GuildMembers, GuildMessages, MessageContent, GuildPresences.
 
 ## 🏗️ Struktur Organisasi Castilla
 
@@ -76,6 +90,14 @@ Bot Discord untuk server Castilla dengan sistem manajemen struktur organisasi, s
 - Node.js v16+
 - NPM/Yarn
 - Discord Bot Token
+- Aktifkan Gateway Intents di Developer Portal:
+  - SERVER MEMBERS INTENT (Guild Members)
+  - PRESENCE INTENT (Guild Presences)
+  - MESSAGE CONTENT INTENT (Message Content)
+- Undang bot dengan permission minimal:
+  - Send Messages, Read Messages/View Channels
+  - Manage Roles (untuk fitur streaming role)
+  - Manage Messages (untuk sticky message dan administrasi)
 
 ### Langkah Instalasi
 
@@ -106,13 +128,50 @@ Bot Discord untuk server Castilla dengan sistem manajemen struktur organisasi, s
 
 Lihat `config.json` untuk pengaturan warna, prefix, sticky delay, dsb.
 
-## 📌 Sticky Messages
+Tambahan konfigurasi untuk fitur streaming/LIVE:
+```json
+{
+  "streamingRole": {
+    "enabled": true,
+    "roleId": "1401310721446379681",
+    "roleName": "🔴 LIVE NOW",
+    "roleColor": "#593695",
+    "autoCreateIfMissing": true,
+    "removeOnStop": true,
+    "requireStreamingUrl": true
+  },
+  "liveAnnouncements": {
+    "enabled": true,
+    "channelId": "1312768414640766976",
+    "deleteOnStop": false
+  },
+  "streamingDetect": {
+    "customStatusLinks": {
+      "enabled": true,
+      "domains": [
+        "tiktok.com",
+        "kick.com",
+        "fb.gg",
+        "facebook.com",
+        "trovo.live",
+        "live.bilibili.com"
+      ]
+    }
+  }
+}
+```
 
-- **Format**: Embed & plain text
-- **Image Support**: URL direct, Discord CDN, Imgur, GitHub
-- **Auto Recreation**: Sticky muncul kembali otomatis
-- **Protection System**: Sticky dilindungi dari penghapusan
-- **Error Recovery**: Retry otomatis jika gagal
+- streamingRole:
+  - roleId/roleName: identitas role streaming (gunakan salah satu; bot akan cari by ID dulu).
+  - autoCreateIfMissing: buat role otomatis jika belum ada.
+  - removeOnStop: hapus role saat live berhenti.
+  - requireStreamingUrl: hanya anggap streaming jika ada URL (untuk ActivityType.Streaming).
+- liveAnnouncements:
+  - channelId: channel tujuan pengumuman LIVE.
+  - deleteOnStop: hapus pesan pengumuman saat live berakhir.
+- streamingDetect.customStatusLinks:
+  - enabled: aktifkan deteksi link live dari Custom Status.
+  - domains: whitelist domain yang dianggap live.
 
 ## 🔐 Permission System
 
@@ -138,6 +197,12 @@ bot_dcCastilla/
 
 ## 📝 Changelog
 
+### v3.3.0
+- NEW: NOW STREAMING role otomatis (auto-create, add/remove saat live start/stop).
+- NEW: Pengumuman LIVE otomatis ke channel terpilih.
+- NEW: Deteksi link live dari Custom Status (domain whitelist).
+- DOCS: Update README terkait intents & permission yang dibutuhkan.
+
 ### v3.2.0 (Terbaru)
 - **CHANGE**: Semua notifikasi `/ms` hanya pesan status singkat (tanpa embed/member detail)
 - **CHANGE**: Dev selalu bisa akses semua slash command tanpa batasan permission
@@ -146,5 +211,3 @@ bot_dcCastilla/
 - **UPDATE**: Struktur organisasi dan sticky system lebih stabil
 
 ---
-
-*Bot ini dikembangkan khusus untuk kebutuhan roleplay mafia server Discord Castilla.*
