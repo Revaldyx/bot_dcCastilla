@@ -24,13 +24,13 @@
     "disabled": false
   },
   "1384811410122342441": {
-    "messageId": "1400858473272574155",
+    "messageId": "1404080052420870247",
     "type": "plain",
     "content": "**Surat Izin**\n```\nNama :\nDurasi :\nReason :\nNote :\n```",
     "image": null,
     "authorId": "403174107904081933",
     "createdAt": 1750939854007,
-    "lastUpdated": 1754060920154,
+    "lastUpdated": 1754829156434,
     "protected": false,
     "errorCount": 0,
     "disabled": false
@@ -62,38 +62,38 @@
     "errorCount": 0,
     "disabled": false
   },
-  "1389657557454553229": {
-    "messageId": "1397246171772227717",
-    "type": "plain",
-    "content": "\n# Exchange Money Format ( 1:1 Umer dengan Upuh)\n```\nNama : \nTotal Umer :\n```\n⏳ : Proses\n❌ : Belum disetor\n✅ : Sudah Diproses\n\nSetor ke Valdy, Aksara, Arth, Michi, sama Sakura.",
-    "image": null,
-    "authorId": "403174107904081933",
-    "createdAt": 1753008231785,
-    "lastUpdated": 1753199736956,
-    "protected": false,
-    "errorCount": 0,
-    "disabled": false
-  },
-  "1387320220045152376": {
-    "messageId": "1400336006636503082",
-    "type": "plain",
-    "content": "# Bahan Alat rampok\n```Ruby Necklace Silver\nDiamond Ring\nEmerald Ring\nDiamond Necklace```\natau\n```\n100 USB\n100 TABLET\n(cari di dumpster\n```",
-    "image": null,
-    "authorId": "403174107904081933",
-    "createdAt": 1753936206610,
-    "lastUpdated": 1753936359095,
-    "protected": false,
-    "errorCount": 0,
-    "disabled": false
-  },
   "1399369287117832354": {
-    "messageId": "1401300031306465360",
+    "messageId": "1401567011833778228",
     "type": "plain",
     "content": "# Cek https://discord.com/channels/1220021811325042768/1399369287117832354/1400568945420800100",
     "image": null,
     "authorId": "403174107904081933",
     "createdAt": 1753991925776,
-    "lastUpdated": 1754166187308,
+    "lastUpdated": 1754229839326,
+    "protected": false,
+    "errorCount": 0,
+    "disabled": false
+  },
+  "1389657557454553229": {
+    "messageId": "1403015626607427715",
+    "type": "plain",
+    "content": "# Exchange Umer Hasil Rampok Warung/Bank\n\nTiap selesai merampok, total uang hasil rampok (umer) dikurangi dengan harga alat rampok, sisanya umer dibagi langsung dengan siapapun yang ikut kegiatan tsb (umer dipegang masing2)\n\n## POTONGAN ALAT RAMPOK UNTUK HASIL RAMPOK WARUNG DAN BANK\n- Warung = $150.000\n- Fleeca = $350.000\n- BC = $620.000\n- Bank Besar = $1.100.000\n\nSetelah itu, umer bisa ditukarkan dengan menulis di channel ini dengan format:\n```\nNama : \nTotal Umer :\n```\nUang putih akan diberikan setelah memberikan umer ke Valdy Atau Aksara.",
+    "image": null,
+    "authorId": "403174107904081933",
+    "createdAt": 1754311335407,
+    "lastUpdated": 1754575390191,
+    "protected": false,
+    "errorCount": 0,
+    "disabled": false
+  },
+  "1387320220045152376": {
+    "messageId": "1404464689190010993",
+    "type": "plain",
+    "content": "# Setoran Mingguan Anggota Keatas\n``` 1 Set Robbery Flecca, BC```\n# Setoran Mingguan Relasi\n``` Batu Diamond, Ruby, Emerald, Carbon \nJumlah min 10```",
+    "image": null,
+    "authorId": "403174107904081933",
+    "createdAt": 1754546293646,
+    "lastUpdated": 1754920856284,
     "protected": false,
     "errorCount": 0,
     "disabled": false

@@ -28,5 +28,32 @@
   "enableErrorReporting": true,
   "autoCleanupInterval": 3600000,
   "rateLimitPerUser": 10,
-  "rateLimitWindow": 60000
+  "rateLimitWindow": 60000,
+  "streamingRole": {
+    "enabled": true,
+    "roleId": "1401310721446379681",
+    "roleName": "🔴 LIVE NOW",
+    "roleColor": "#593695",
+    "autoCreateIfMissing": true,
+    "removeOnStop": true,
+    "requireStreamingUrl": true
+  },
+  "liveAnnouncements": {
+    "enabled": true,
+    "channelId": "1312768414640766976",
+    "deleteOnStop": false
+  },
+  "streamingDetect": {
+    "customStatusLinks": {
+      "enabled": true,
+      "domains": [
+        "tiktok.com",
+        "kick.com",
+        "fb.gg",
+        "facebook.com",
+        "trovo.live",
+        "live.bilibili.com"
+      ]
+    }
+  }
 }

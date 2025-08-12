@@ -2,16 +2,7 @@
   "positions": {
     "boss": {
       "name": "👑 **Le Patron (Boss)**",
-      "members": [
-        {
-          "id": "7789",
-          "name": "Valdyx ST Castilla",
-          "userId": "403174107904081933",
-          "addedBy": "403174107904081933",
-          "addedAt": 1750171827995,
-          "movedAt": 1752655340572
-        }
-      ],
+      "members": [],
       "maxMembers": 2,
       "description": "Pemimpin tertinggi keluarga Castilla"
     },
@@ -24,14 +15,6 @@
           "userId": "1058968902220128276",
           "addedBy": "403174107904081933",
           "addedAt": 1750171927153
-        },
-        {
-          "id": "3842",
-          "name": "Arth Rose",
-          "userId": "289935368067743744",
-          "addedBy": "403174107904081933",
-          "addedAt": 1750172660617,
-          "movedAt": 1751820874758
         },
         {
           "id": "6712",
@@ -47,21 +30,22 @@
     },
     "captain": {
       "name": "⚔️ **Les Capitaines (Captains)**",
-      "members": [],
+      "members": [
+        {
+          "id": "3842",
+          "name": "Arth Rose",
+          "userId": "289935368067743744",
+          "addedBy": "403174107904081933",
+          "addedAt": 1750172660617,
+          "movedAt": 1754547974980
+        }
+      ],
       "maxMembers": 10,
       "description": "Kapten operasional keluarga Castilla"
     },
     "broker": {
       "name": "💼 **Les Brokers (Brokers)**",
       "members": [
-        {
-          "id": "8345",
-          "name": "Maura Olydia Castilla",
-          "userId": "1299896223083532291",
-          "addedBy": "403174107904081933",
-          "addedAt": 1750171976606,
-          "movedAt": 1751820793954
-        },
         {
           "id": "5678",
           "name": "Van Housen",
@@ -79,14 +63,6 @@
           "movedAt": 1751820528852
         },
         {
-          "id": "3456",
-          "name": "Nurawan Castilla",
-          "userId": "441594829177356289",
-          "addedBy": "403174107904081933",
-          "addedAt": 1750173243388,
-          "movedAt": 1752403624178
-        },
-        {
           "id": "9553",
           "name": "Vernael Rose",
           "userId": "757762312315601056",
@@ -94,14 +70,6 @@
           "addedAt": 1752585444919,
           "lastUpdated": 1752585880375,
           "movedAt": 1752955061946
-        },
-        {
-          "id": "2345",
-          "name": "Asep Castilla",
-          "userId": "707811317053915207",
-          "addedBy": "403174107904081933",
-          "addedAt": 1751256572695,
-          "movedAt": 1753434995889
         },
         {
           "id": "2059",
@@ -112,28 +80,20 @@
           "movedAt": 1753937974934
         },
         {
-          "id": "1508",
-          "name": "Biru Castilla",
-          "userId": "762836598080536588",
-          "addedBy": "403174107904081933",
-          "addedAt": 1750172409591,
-          "movedAt": 1753938016995
-        },
-        {
-          "id": "4821",
-          "name": "Mattheo Castilla",
-          "userId": "486491828238155787",
-          "addedBy": "403174107904081933",
-          "addedAt": 1750172483820,
-          "movedAt": 1753938050740
-        },
-        {
           "id": "9064",
           "name": "Bravy Corleone",
           "userId": "796047872977272863",
           "addedBy": "403174107904081933",
           "addedAt": 1753559645754,
           "movedAt": 1754059915691
+        },
+        {
+          "id": "8901",
+          "name": "Noirveil Castilla",
+          "userId": "420173939382288384",
+          "addedBy": "403174107904081933",
+          "addedAt": 1751399497219,
+          "movedAt": 1754903253336
         }
       ],
       "maxMembers": 25,
@@ -143,19 +103,52 @@
       "name": "🤝 **Les Recrues (Recruit)**",
       "members": [
         {
-          "id": "8901",
-          "name": "Noirveil Castilla",
-          "userId": "420173939382288384",
-          "addedBy": "403174107904081933",
-          "addedAt": 1751399497219
-        },
-        {
           "id": "7103",
           "name": "Eriq Lawrance",
           "userId": "691927796485849110",
           "addedBy": "403174107904081933",
           "addedAt": 1753376950258,
           "lastUpdated": 1754171488872
+        },
+        {
+          "id": "3456",
+          "name": "Nurawan Castilla",
+          "userId": "441594829177356289",
+          "addedBy": "403174107904081933",
+          "addedAt": 1750173243388,
+          "movedAt": 1754311424564
+        },
+        {
+          "id": "2345",
+          "name": "Asep Castilla",
+          "userId": "707811317053915207",
+          "addedBy": "403174107904081933",
+          "addedAt": 1751256572695,
+          "movedAt": 1754547225504
+        },
+        {
+          "id": "1508",
+          "name": "Biru Castilla",
+          "userId": "762836598080536588",
+          "addedBy": "403174107904081933",
+          "addedAt": 1750172409591,
+          "movedAt": 1754547261311
+        },
+        {
+          "id": "4821",
+          "name": "Mattheo Castilla",
+          "userId": "486491828238155787",
+          "addedBy": "403174107904081933",
+          "addedAt": 1750172483820,
+          "movedAt": 1754547292109
+        },
+        {
+          "id": "7789",
+          "name": "Valdyx ST Castilla",
+          "userId": "403174107904081933",
+          "addedBy": "403174107904081933",
+          "addedAt": 1750171827995,
+          "movedAt": 1754853727600
         }
       ],
       "maxMembers": 50,
@@ -163,8 +156,8 @@
     }
   },
   "metadata": {
-    "lastUpdated": 1754171504094,
+    "lastUpdated": 1754903263237,
     "version": "1.0.0",
-    "totalMembers": 16
+    "totalMembers": 15
   }
 }

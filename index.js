@@ -13,7 +13,9 @@ const client = new Client({
     intents: [
         GatewayIntentBits.Guilds,
         GatewayIntentBits.GuildMessages,
-        GatewayIntentBits.MessageContent
+        GatewayIntentBits.MessageContent,
+        GatewayIntentBits.GuildPresences,     // ADDED: detect streaming status
+        GatewayIntentBits.GuildMembers        // ADDED: manage roles reliably
     ]
 });
 
@@ -102,7 +104,96 @@ function loadSlashCommands() {
 loadCommands();
 loadSlashCommands();
 
-client.once('ready', () => {
+/** ===== NOW STREAMING role utils ===== */
+const streamingCfg = config.streamingRole || {};
+const liveCfg = config.liveAnnouncements || { enabled: false };
+const liveSessions = new Map(); // key: `${guildId}:${userId}` => { messageId, url, startedAt }
+const streamingDetectCfg = (config.streamingDetect && config.streamingDetect.customStatusLinks) || { enabled: false, domains: [] };
+
+function isMemberStreaming(presence) {
+    // Use unified detector
+    return !!getStreamingActivity(presence);
+}
+
+function getStreamingActivity(presence) {
+    if (!presence) return null;
+
+    const requireUrl = streamingCfg.requireStreamingUrl !== false;
+
+    // 1) Native Discord Streaming activity (Twitch/YouTube/Go Live with URL)
+    const native = (presence.activities || []).find(a =>
+        a.type === ActivityType.Streaming && (!requireUrl || !!a.url)
+    );
+    if (native) return native;
+
+    // 2) Fallback: detect live link in Custom Status (e.g., TikTok, Kick, FB Gaming)
+    if (streamingDetectCfg.enabled) {
+        const custom = (presence.activities || []).find(a =>
+            a.type === ActivityType.Custom && typeof a.state === 'string' && a.state.length
+        );
+        if (custom) {
+            const match = custom.state.match(/https?:\/\/\S+/i);
+            if (match) {
+                try {
+                    const url = new URL(match[0]);
+                    const host = url.hostname.toLowerCase();
+                    const domains = streamingDetectCfg.domains || [];
+                    const matches = domains.some(d => host === d || host.endsWith(`.${d}`));
+                    if (matches) {
+                        // Return a normalized object with url so downstream code can announce it
+                        return { url: url.toString(), type: 'CUSTOM_LINK' };
+                    }
+                } catch {
+                    // ignore invalid URLs
+                }
+            }
+        }
+    }
+
+    return null;
+}
+
+async function getOrCreateStreamingRole(guild) {
+    if (!streamingCfg.enabled) return null;
+
+    // Try by ID first
+    if (streamingCfg.roleId) {
+        const byId = guild.roles.cache.get(streamingCfg.roleId) || await guild.roles.fetch(streamingCfg.roleId).catch(() => null);
+        if (byId) return byId;
+    }
+
+    // Fallback: by name
+    const roleName = streamingCfg.roleName || 'NOW STREAMING';
+    let role = guild.roles.cache.find(r => r.name === roleName);
+    if (role) return role;
+
+    // Auto-create if allowed
+    if (streamingCfg.autoCreateIfMissing) {
+        const me = guild.members.me;
+        if (!me || !me.permissions.has(PermissionFlagsBits.ManageRoles)) {
+            console.warn(`⚠️ Missing ManageRoles in guild ${guild.name}, cannot create streaming role.`);
+            return null;
+        }
+        try {
+            role = await guild.roles.create({
+                name: roleName,
+                color: streamingCfg.roleColor || '#593695',
+                mentionable: true,
+                reason: 'Auto-created streaming role'
+            });
+            console.log(`✅ Created role "${roleName}" in guild ${guild.name}`);
+            return role;
+        } catch (e) {
+            console.error(`❌ Failed creating role "${roleName}" in ${guild.name}:`, e.message);
+            return null;
+        }
+    }
+
+    return null;
+}
+/** ==================================== */
+
+client.once('ready', async () => {
     console.log(`✅ Bot ${client.user.tag} telah online!`);
     console.log(`📊 Loaded ${client.commands.size} traditional commands`);
     console.log(`⚡ Loaded ${client.slashCommands.size} slash commands`);
@@ -111,6 +202,13 @@ client.once('ready', () => {
 
     // Set bot activity with proper type
     client.user.setActivity('Discord Castilla | /help', { type: ActivityType.Watching });
+
+    // Ensure NOW STREAMING role exists (optional auto-create)
+    if (streamingCfg.enabled && streamingCfg.autoCreateIfMissing) {
+        for (const [, guild] of client.guilds.cache) {
+            await getOrCreateStreamingRole(guild);
+        }
+    }
 });
 
 // Handle slash command interactions with rate limiting
@@ -267,6 +365,97 @@ client.on('messageCreate', async message => {
         } catch (replyError) {
             console.error('Cannot send error message:', replyError);
         }
+    }
+});
+
+// Assign/Remove NOW STREAMING role on presence updates
+client.on('presenceUpdate', async (oldPresence, newPresence) => {
+    try {
+        if (!streamingCfg.enabled && !liveCfg.enabled) return;
+        if (!newPresence || !newPresence.guild) return;
+        if (newPresence.user?.bot) return;
+
+        const guild = newPresence.guild;
+        const me = guild.members.me;
+        if (!me) return;
+
+        const member = newPresence.member || await guild.members.fetch(newPresence.userId).catch(() => null);
+        if (!member) return;
+
+        // Role management (do not return if missing ManageRoles; just skip role part)
+        if (streamingCfg.enabled) {
+            if (me.permissions.has(PermissionFlagsBits.ManageRoles)) {
+                const role = await getOrCreateStreamingRole(guild);
+                if (role) {
+                    const canManage = me.roles.highest.comparePositionTo(role) > 0;
+                    if (!canManage) {
+                        console.warn(`⚠️ Cannot manage role "${role.name}" in ${guild.name} due to role hierarchy.`);
+                    } else {
+                        const activity = getStreamingActivity(newPresence);
+                        const streaming = !!activity;
+                        const hasRole = member.roles.cache.has(role.id);
+
+                        if (streaming && !hasRole) {
+                            await member.roles.add(role, 'Member is streaming').catch(err => {
+                                if (err.code === 50013) console.warn('⚠️ Missing permission to add role.');
+                                else console.error('❌ Failed to add streaming role:', err);
+                            });
+                        } else if (!streaming && hasRole && (streamingCfg.removeOnStop !== false)) {
+                            await member.roles.remove(role, 'Member stopped streaming').catch(err => {
+                                if (err.code === 50013) console.warn('⚠️ Missing permission to remove role.');
+                                else console.error('❌ Failed to remove streaming role:', err);
+                            });
+                        }
+                    }
+                }
+            } else {
+                // No ManageRoles: skip role update but continue to announcements
+            }
+        }
+
+        // Livestream link announcement (works for native streaming and custom-status link)
+        if (liveCfg.enabled && liveCfg.channelId) {
+            const key = `${guild.id}:${member.id}`;
+            const activity = getStreamingActivity(newPresence);
+            const isStreamingNow = !!activity && !!activity.url;
+
+            if (isStreamingNow) {
+                if (!liveSessions.has(key)) {
+                    const channel =
+                        guild.channels.cache.get(liveCfg.channelId) ||
+                        await guild.channels.fetch(liveCfg.channelId).catch(() => null);
+
+                    if (!channel) return;
+
+                    const perms = channel.permissionsFor(me);
+                    if (!perms || !perms.has(PermissionFlagsBits.SendMessages)) return;
+
+                    const msgContent = `🔴 ${member} sedang LIVE sekarang!\nTonton di: ${activity.url}`;
+                    const sent = await channel.send({ content: msgContent }).catch(err => {
+                        console.error('❌ Failed to send live announcement:', err);
+                        return null;
+                    });
+                    if (sent) {
+                        liveSessions.set(key, { messageId: sent.id, url: activity.url, startedAt: Date.now() });
+                    }
+                }
+            } else {
+                const prev = liveSessions.get(key);
+                if (prev) {
+                    if (liveCfg.deleteOnStop) {
+                        const channel =
+                            guild.channels.cache.get(liveCfg.channelId) ||
+                            await guild.channels.fetch(liveCfg.channelId).catch(() => null);
+                        if (channel) {
+                            await channel.messages.delete(prev.messageId).catch(() => { });
+                        }
+                    }
+                    liveSessions.delete(key);
+                }
+            }
+        }
+    } catch (e) {
+        console.error('❌ Error in presenceUpdate handler:', e);
     }
 });
 
